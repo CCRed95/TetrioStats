@@ -9,17 +9,22 @@ using Ccr.Colorization.Mappings;
 using Ccr.Std.Core.Extensions;
 using Ccr.Std.Core.Extensions.NumericExtensions;
 using Ccr.Std.Core.Numerics.Ranges;
+using Ccr.Terminal;
 using Ccr.Terminal.Application;
 using Ccr.Terminal.Extensions;
 using Ccr.Terminal.Extensions.Fluent.Json;
 using TetrioStats.Api;
+using TetrioStats.Api.Domain.Json.Streams;
 using TetrioStats.Api.Domain.Rankings;
 using TetrioStats.Api.Domain.Streams;
+using TetrioStats.Api.Extensions;
+using TetrioStats.Api.Replays;
 using TetrioStats.Data.Context;
 using TetrioStats.Data.Domain;
 using TetrioStats.Data.Enums;
 using TetrioStats.Terminal.Extensions;
 using static Ccr.Terminal.ExtendedConsole;
+using UserInfo = TetrioStats.Core.Data.Common.Users.UserInfo;
 
 namespace TetrioStats.Terminal.Commands
 {
@@ -47,7 +52,7 @@ namespace TetrioStats.Terminal.Commands
 				["A"] = FromHex("#369145"),
 				["A+"] = FromHex("#3a9d2f"),
 				["S-"] = FromHex("#9e8925"),
-				["S"] = FromHex("#b78"),
+				["S"] = FromHex("#d19e26"),
 				["S+"] = FromHex("#cea125"),
 				["SS"] = FromHex("#df9020"),
 				["U"] = FromHex("#ae5128"),

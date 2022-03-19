@@ -10,11 +10,14 @@
   <ItemGroup>
     <PackageReference Include="Ccr.Scraping.API" Version="1.0.0" />
     <PackageReference Include="Ccr.Std.Core" Version="3.1.0" />
+    <PackageReference Include="Ccr.Terminal" Version="3.0.2" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\TetrioStats.Core\TetrioStats.Core.csproj" />
     <ProjectReference Include="..\TetrioStats.Data\TetrioStats.Data.csproj" />
+    <ProjectReference Include="..\TetrioStats.Replays\TetrioStats.Replays.csproj" />
   </ItemGroup>
 
 </Project>

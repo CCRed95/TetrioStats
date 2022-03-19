@@ -20,8 +20,8 @@ namespace TetrioStats.Data.Context
 		protected override void OnConfiguring(
 			DbContextOptionsBuilder optionsBuilder)
 		{
-			var userId = "ENTER USERNAME";
-			var password = "ENTER PASSWORD";
+			const string userId = "podcache_tetriostats_public";
+			const string password = "90+o2X^J=1OM";
 
 			var connectionStr =
 				"server=66.29.135.228;" +
@@ -42,7 +42,12 @@ namespace TetrioStats.Data.Context
 				.WithConfiguration<GameRecordMap, GameRecord>()
 				.WithConfiguration<UserMap, User>()
 				.WithConfiguration<UserStatisticsEntryMap, UserStatisticsEntry>()
-				.WithConfiguration<TLStatsEntryMap, TLStatsEntry>();
+				.WithConfiguration<TLStatsEntryMap, TLStatsEntry>()
+				.WithConfiguration<CountryMap, Country>();
+			
+			//modelBuilder
+			//		.Entity<Country>()
+			//		.HasData()
 		}
 	}
 }

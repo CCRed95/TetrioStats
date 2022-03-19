@@ -1,5 +1,6 @@
 ﻿using System;
 using Newtonsoft.Json;
+using TetrioStats.Core.Data.Common.Users;
 using TetrioStats.Data.Domain;
 
 namespace TetrioStats.Api.Domain.Json.Streams
@@ -32,7 +33,7 @@ namespace TetrioStats.Api.Domain.Json.Streams
 
 		public GameRecord ToGameRecord()
 		{
-			var user = _client.FetchUser(UserInfo.UserId);
+			var user = _client.ResolveUser(UserInfo.UserId);
 
 			return new GameRecord
 			{

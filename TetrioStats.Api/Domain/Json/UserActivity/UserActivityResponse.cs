@@ -1,4 +1,5 @@
 ﻿using System;
+using TetrioStats.Core.Data.Common.Users;
 
 namespace TetrioStats.Api.Domain.Json.UserActivity
 {

@@ -7,7 +7,7 @@ namespace TetrioStats.Data.Context
 	public class LocalCoreContext
 		: DbContextBase
 	{
-		public override string DatabaseName => "TetrioStats";
+		public override string DatabaseName => "TetrioStatistics";
 
 
 		public DbSet<User> Users { get; set; }

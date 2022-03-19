@@ -1,4 +1,6 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using Ccr.Std.Core.Extensions;
@@ -19,6 +21,17 @@ namespace TetrioStats.Terminal.Commands
 		private static readonly TetrioApiClient _client = new TetrioApiClient();
 		private static readonly CoreContext _coreContext = new CoreContext();
 
+		private static readonly IReadOnlyList<double> _base10List =
+			new List<double>
+			{
+				0.001,
+				0.01,
+				0.1,
+				1,
+				10,
+				100,
+				1000,
+			};
 
 		public override string CommandName => "gen-excel";
 
@@ -207,8 +220,21 @@ namespace TetrioStats.Terminal.Commands
 				min *= 0.95;
 				max *= 1.05;
 
+				var value = 11;
+				var precision = 10;
+				var lowerScale = (value - (value % precision));
+				var upperScale = (value + (value % precision));
+
+				Console.WriteLine((lowerScale, upperScale));
+
+
 				var absoluteYAxisRange = max - min;
 				var yAxisStep = absoluteYAxisRange / 10d;
+
+				var distancesToBase10s = _base10List
+					.Concat(_base10List.Select(t => 2 * t))
+					.Select(t => (base10: t, yAxisStep / t))
+					.ToArray();
 
 				trChart.YAxis.MinValue = min;
 				trChart.YAxis.MaxValue = max;
@@ -223,8 +249,27 @@ namespace TetrioStats.Terminal.Commands
 			pck.Save();
 		}
 
+		public static void t()
+		{
+			Console.WriteLine($"[min..max] -> [graphMin..graphMax] at precision x");
 
-		public override void Dispose()
+			GetMinMaxScale(22d, 75d, 10d);
+			GetMinMaxScale(22d, 75d, 100d);
+			GetMinMaxScale(1.7d, 7.5d, 0.5d);
+			GetMinMaxScale(1.234d, 1.238d, 0.01d);
+		}
+
+		public static (double, double) GetMinMaxScale(double min, double max, double scaleStep)
+		{
+			var lowerScale = (min - (min % scaleStep));
+			var upperScale = (max - (max % scaleStep) + scaleStep);
+
+			Console.WriteLine($"[{min}..{max}] -> [{lowerScale}..{upperScale}] at precision {scaleStep}");
+
+			return (lowerScale, upperScale);
+		}
+
+	public override void Dispose()
 		{
 			_client.Dispose();
 			_coreContext.Dispose();

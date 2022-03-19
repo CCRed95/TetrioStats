@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Ccr.Std.Core" Version="3.1.0" />
+    <PackageReference Include="Ccr.Terminal" Version="3.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TetrioStats.Api\TetrioStats.Api.csproj" />
+    <ProjectReference Include="..\TetrioStats.Core\TetrioStats.Core.csproj" />
+    <ProjectReference Include="..\TetrioStats.Data\TetrioStats.Data.csproj" />
+  </ItemGroup>
+
+</Project>

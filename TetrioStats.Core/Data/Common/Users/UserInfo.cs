@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace TetrioStats.Api.Domain.Json.Streams
+namespace TetrioStats.Core.Data.Common.Users
 {
 	public class UserInfo
 	{

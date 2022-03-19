@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using TetrioStats.Api.Domain.Json.Leaderboards;
 using TetrioStats.Api.Domain.Json.Streams;
+using TetrioStats.Api.Domain.Json.UserMe;
 using TetrioStats.Api.Domain.Json.Users;
 using TetrioStats.Api.Domain.Streams;
 using TetrioStats.Api.Utilities;
@@ -22,6 +23,7 @@ namespace TetrioStats.Api
 		private static readonly IList<User> _cachedUsers = new List<User>();
 
 		private readonly CoreContext _coreContext;
+		private readonly LocalCoreContext _localContext;
 
 		[JsonIgnore]
 		private static readonly JsonSerializerSettings _converterSettings = new JsonSerializerSettings
@@ -39,11 +41,22 @@ namespace TetrioStats.Api
 		public TetrioApiClient()
 		{
 			_coreContext = new CoreContext();
+			_localContext = new LocalCoreContext();
 		}
 
 
+		internal static async Task<bool> ValidateBearerToken(
+			string token)
+		{
+			var userMe = await FetchUserMeAsync(token);
+
+			return true;
+		}
+
 		public User FetchUser(string userIdOrUsername)
 		{
+			return ResolveUser(userIdOrUsername);
+			
 			if (UserInfoUtilities.IsValidUserID(userIdOrUsername))
 			{
 				var cachedUser = _cachedUsers.FirstOrDefault(
@@ -52,7 +65,7 @@ namespace TetrioStats.Api
 				if (cachedUser != null)
 					return cachedUser;
 
-				cachedUser = _coreContext.Users.FirstOrDefault(
+				cachedUser = _localContext.Users.FirstOrDefault(
 					t => t.TetrioUserID == userIdOrUsername);
 
 				if (cachedUser != null)
@@ -61,14 +74,10 @@ namespace TetrioStats.Api
 					return cachedUser;
 				}
 
-				var userData = FetchUserData(userIdOrUsername);
+				var user = ResolveUser(userIdOrUsername);
 
-				var user = new User(
-					userData.Content.UserID,
-					userData.Content.Username);
-
-				_coreContext.Users.Add(user);
-				_coreContext.SaveChanges();
+				_localContext.Users.Add(user);
+				_localContext.SaveChanges();
 
 				_cachedUsers.Add(user);
 				return user;
@@ -81,7 +90,7 @@ namespace TetrioStats.Api
 				if (cachedUser != null)
 					return cachedUser;
 
-				cachedUser = _coreContext.Users.FirstOrDefault(
+				cachedUser = _localContext.Users.FirstOrDefault(
 					t => t.Username == userIdOrUsername);
 
 				if (cachedUser != null)
@@ -90,14 +99,10 @@ namespace TetrioStats.Api
 					return cachedUser;
 				}
 
-				var userData = FetchUserData(userIdOrUsername);
+				var user = ResolveUser(userIdOrUsername);
 
-				var user = new User(
-					userData.Content.UserID,
-					userData.Content.Username);
-
-				_coreContext.Users.Add(user);
-				_coreContext.SaveChanges();
+				_localContext.Users.Add(user);
+				_localContext.SaveChanges();
 
 				_cachedUsers.Add(user);
 				return user;
@@ -204,6 +209,28 @@ namespace TetrioStats.Api
 				return null;
 
 			return new User(resolvedUserIDResponse.UserID, username);
+		}
+
+
+
+		internal static async Task<UserMeResponse> FetchUserMeAsync(
+			string token)
+		{
+			var url = TetrioRequestUrls.UsersMeUrl();
+
+			using var httpClient = new TetrioHttpClient(token);
+
+			using var request = new HttpRequestMessage(
+				new HttpMethod("GET"), url);
+
+			var response = await httpClient.SendAsync(request);
+
+			var jsonContent = await response.Content.ReadAsStringAsync();
+
+			var userMeResponse = JsonConvert
+				.DeserializeObject< UserMeResponse>(jsonContent);
+
+			return userMeResponse;
 		}
 
 
@@ -348,6 +375,7 @@ namespace TetrioStats.Api
 		public void Dispose()
 		{
 			_coreContext?.Dispose();
+			_localContext?.Dispose();
 		}
 	}
 }

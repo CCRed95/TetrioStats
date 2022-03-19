@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using TetrioStats.Core.Data.Common.Users;
 
 // ReSharper disable StringLiteralTypo
 
@@ -47,14 +48,14 @@ namespace TetrioStats.Api.Replays
 		public long Winning { get; set; }
 	}
 
-	public class UserInfo
-	{
-		[JsonProperty("_id")]
-		public string Id { get; set; }
+	//public class UserInfo
+	//{
+	//	[JsonProperty("_id")]
+	//	public string Id { get; set; }
 
-		[JsonProperty("username")]
-		public string Username { get; set; }
-	}
+	//	[JsonProperty("username")]
+	//	public string Username { get; set; }
+	//}
 
 	public class Replay
 	{

@@ -28,4 +28,4 @@ namespace TetrioStats.Api.Domain.Json.Leaderboards
 		[JsonProperty("country")]
 		public string Country { get; set; }
 	}
-}
+}  
