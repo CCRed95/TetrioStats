@@ -2,17 +2,16 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
 		<Version>3.0.0.0</Version>
 		<Authors>CCRed95</Authors>
 		<Description>Statistics tracker terminal application for tetr.io performance statistics</Description>
 		<SignAssembly>true</SignAssembly>
-		<AssemblyOriginatorKeyFile>DefaultKey.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Ccr.Std.Core" Version="3.1.0" />
-		<PackageReference Include="Ccr.Terminal" Version="3.0.2" />
+		<PackageReference Include="Ccr.Terminal" Version="3.1.0" />
 		<PackageReference Include="EPPlus" Version="5.8.3" />
 		<PackageReference Include="Microsoft.Data.SqlClient" Version="3.0.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.17">

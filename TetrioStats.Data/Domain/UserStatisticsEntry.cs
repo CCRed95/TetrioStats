@@ -208,4 +208,14 @@ namespace TetrioStats.Data.Domain
 			return false;
 		}
 	}
+
+
+	public class PublicRoomListInfo
+	{
+		public bool WasSuccessful { get; set; }
+
+		public int RoomId { get; set; }
+
+		public string RoomName { get; set; }
+	}
 }

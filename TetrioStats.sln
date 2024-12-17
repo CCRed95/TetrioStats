@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31112.23
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TetrioStats.Data", "TetrioStats.Data\TetrioStats.Data.csproj", "{8B8E3050-6D65-4FA8-A7B0-3488AE4F7A31}"
 EndProject
@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TetrioStats.Core", "TetrioS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TetrioStats.Replays", "TetrioStats.Replays\TetrioStats.Replays.csproj", "{19F9BF85-74F3-4968-960A-281A5E1C871E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TetrioStats.Services", "TetrioStats.Services\TetrioStats.Services.csproj", "{D6B41326-DBFE-40CA-93D8-23FEE6538FE8}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{BB7712D2-A5F0-4838-BB92-0039650816A4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TetrioStats.Api.Tests", "Tests\TetrioStats.Api.Tests\TetrioStats.Api.Tests.csproj", "{3D092719-FF2A-443C-AFC8-EB225277D7C3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,13 +43,16 @@ Global
 		{19F9BF85-74F3-4968-960A-281A5E1C871E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{19F9BF85-74F3-4968-960A-281A5E1C871E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{19F9BF85-74F3-4968-960A-281A5E1C871E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D6B41326-DBFE-40CA-93D8-23FEE6538FE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D6B41326-DBFE-40CA-93D8-23FEE6538FE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D6B41326-DBFE-40CA-93D8-23FEE6538FE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D6B41326-DBFE-40CA-93D8-23FEE6538FE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D092719-FF2A-443C-AFC8-EB225277D7C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D092719-FF2A-443C-AFC8-EB225277D7C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D092719-FF2A-443C-AFC8-EB225277D7C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D092719-FF2A-443C-AFC8-EB225277D7C3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3D092719-FF2A-443C-AFC8-EB225277D7C3} = {BB7712D2-A5F0-4838-BB92-0039650816A4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C0B13F70-B454-41A5-B0C4-6AFEA0ABB487}

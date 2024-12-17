@@ -1,228 +1,227 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
-using Ccr.Terminal.Application;
-using Ccr.Terminal.Extensions.Fluent.Json;
-using TetrioStats.Api;
-using TetrioStats.Api.Domain.Json.TenchiStats;
-using TetrioStats.Terminal.Extensions;
-using static Ccr.Terminal.ExtendedConsole;
+﻿//using System;
+//using System.Collections.Generic;
+//using System.Drawing;
+//using System.IO;
+//using System.Linq;
+//using System.Text.RegularExpressions;
+//using Ccr.Terminal.Application;
+//using Ccr.Terminal.Extensions.Fluent.Json;
+//using TetrioStats.Api;
+//using TetrioStats.Terminal.Extensions;
+//using static Ccr.Terminal.ExtendedConsole;
 
-namespace TetrioStats.Terminal.Commands
-{
-	public class FetchTenchiStatisticsCommand
-		: TerminalCommand<string>
-	{
-		private static readonly DirectoryInfo _tetrioStatsDirectory = new DirectoryInfo(
-			@"C:\Tetris\Data\Tenchi\tetrio-stats\");
+//namespace TetrioStats.Terminal.Commands
+//{
+//	public class FetchTenchiStatisticsCommand
+//		: TerminalCommand<string>
+//	{
+//		private static readonly DirectoryInfo _tetrioStatsDirectory = new(
+//			@"C:\Tetris\Data\Tenchi\tetrio-stats\");
 
-		private static readonly TetrioApiClient _client = new TetrioApiClient();
-		private static readonly Regex _dateTimeRegex = new Regex(
-			@"^(?<year>[\d]{4})-(?<month>[\d]{2})-(?<day>[\d]{2})T(?<hour>[\d]{2})(?<min>[\d]{2})(?<sec>[\d]{2})$");
-
-
-		public override string CommandName => "tenchi-stats";
-
-		public override string ShortCommandName => "ts";
+//		private static readonly TetrioApiClient _client = new();
+//		private static readonly Regex _dateTimeRegex = new(
+//			@"^(?<year>[\d]{4})-(?<month>[\d]{2})-(?<day>[\d]{2})T(?<hour>[\d]{2})(?<min>[\d]{2})(?<sec>[\d]{2})$");
 
 
-		private static bool TryGetDateTime(
-			DirectoryInfo directory,
-			out DateTime? dateTime,
-			out FileInfo jsonFileInfo)
-		{
-			if (!_dateTimeRegex.IsMatch(directory.Name))
-			{
-				XConsole.WriteLine($" Cannot Parse DateTime: \"{directory.Name}\"", Color.DeepPink);
+//		public override string CommandName => "tenchi-stats";
+
+//		public override string ShortCommandName => "ts";
+
+
+//		private static bool TryGetDateTime(
+//			DirectoryInfo directory,
+//			out DateTime? dateTime,
+//			out FileInfo jsonFileInfo)
+//		{
+//			if (!_dateTimeRegex.IsMatch(directory.Name))
+//			{
+//				XConsole.WriteLine($" Cannot Parse DateTime: \"{directory.Name}\"", Color.DeepPink);
 				
-				dateTime = null;
-				jsonFileInfo = null;
+//				dateTime = null;
+//				jsonFileInfo = null;
 
-				return false;
-			}
+//				return false;
+//			}
 
-			var match = _dateTimeRegex.Match(directory.Name);
+//			var match = _dateTimeRegex.Match(directory.Name);
 
-			var year = int.Parse(match.Groups["year"].Value);
-			var month = int.Parse(match.Groups["month"].Value);
-			var day = int.Parse(match.Groups["day"].Value);
-			var hour = int.Parse(match.Groups["hour"].Value);
-			var min = int.Parse(match.Groups["min"].Value);
-			var sec = int.Parse(match.Groups["sec"].Value);
+//			var year = int.Parse(match.Groups["year"].Value);
+//			var month = int.Parse(match.Groups["month"].Value);
+//			var day = int.Parse(match.Groups["day"].Value);
+//			var hour = int.Parse(match.Groups["hour"].Value);
+//			var min = int.Parse(match.Groups["min"].Value);
+//			var sec = int.Parse(match.Groups["sec"].Value);
 
-			dateTime = new DateTime(year, month, day, hour, min, sec);
+//			dateTime = new DateTime(year, month, day, hour, min, sec);
 			
-			var jsonFile = new FileInfo($@"{directory.FullName}\league.json");
+//			var jsonFile = new FileInfo($@"{directory.FullName}\league.json");
 
-			if (!jsonFile.Exists)
-			{
-				XConsole.WriteLine($" Cannot find path: \"{jsonFile.FullName}\"", Color.DeepPink);
+//			if (!jsonFile.Exists)
+//			{
+//				XConsole.WriteLine($" Cannot find path: \"{jsonFile.FullName}\"", Color.DeepPink);
 
-				dateTime = null;
-				jsonFileInfo = null;
+//				dateTime = null;
+//				jsonFileInfo = null;
 
-				return false;
-			}
+//				return false;
+//			}
 
-			jsonFileInfo = jsonFile;
+//			jsonFileInfo = jsonFile;
 
-			return true;
-		}
-
-
-		public override void Execute(string args)
-		{
-			XConsole.Write(" Enter a username to fetch: ", Color.MediumTurquoise);
-
-			var username = XConsole.ReadLine();
-			username = username.ToLower();
-			var userInfo = _client.FetchUser(username);
-
-			var verbose = XConsole.PromptYesNo(" Verbose JSON output?");
+//			return true;
+//		}
 
 
-			var userDataInfo = new Dictionary<DateTime, TenchiUserStatistics>();
+//		public override void Execute(string args)
+//		{
+//			XConsole.Write(" Enter a username to fetch: ", Color.MediumTurquoise);
 
-			var userData = _client.FetchUserData(username);
-			var userJoinDate = userData.Content.TimeStamp - TimeSpan.FromDays(2);
+//			var username = XConsole.ReadLine();
+//			username = username.ToLower();
+//			var userInfo = _client.FetchUser(username);
 
-			//var directories = _tetrioStatsDirectory.GetDirectories();
+//			var verbose = XConsole.PromptYesNo(" Verbose JSON output?");
 
-			foreach (var subDirectory in _tetrioStatsDirectory.GetDirectories())
-			{
-				if (!_dateTimeRegex.IsMatch(subDirectory.Name))
-				{
-					XConsole.WriteLine(" Cannot Parse DateTime: \"" + subDirectory.Name + "\"", Color.DeepPink);
-					continue;
-				}
 
-				var match = _dateTimeRegex.Match(subDirectory.Name);
+//			var userDataInfo = new Dictionary<DateTime, TenchiUserStatistics>();
 
-				var year = int.Parse(match.Groups["year"].Value);
-				var month = int.Parse(match.Groups["month"].Value);
-				var day = int.Parse(match.Groups["day"].Value);
-				var hour = int.Parse(match.Groups["hour"].Value);
-				var min = int.Parse(match.Groups["min"].Value);
-				var sec = int.Parse(match.Groups["sec"].Value);
+//			var userData = _client.FetchUserData(username);
+//			var userJoinDate = userData.Content.TimeStamp - TimeSpan.FromDays(2);
 
-				var dateTime = new DateTime(year, month, day, hour, min, sec);
+//			//var directories = _tetrioStatsDirectory.GetDirectories();
 
-				if (dateTime < userJoinDate)
-				{
-					continue;
-				}
+//			foreach (var subDirectory in _tetrioStatsDirectory.GetDirectories())
+//			{
+//				if (!_dateTimeRegex.IsMatch(subDirectory.Name))
+//				{
+//					XConsole.WriteLine(" Cannot Parse DateTime: \"" + subDirectory.Name + "\"", Color.DeepPink);
+//					continue;
+//				}
 
-				var jsonFile = subDirectory.FullName + @"\league.json";
-				var jsonFileInfo = new FileInfo(jsonFile);
+//				var match = _dateTimeRegex.Match(subDirectory.Name);
 
-				if (!jsonFileInfo.Exists)
-				{
-					XConsole.WriteLine(" Cannot find path: \"" + jsonFileInfo.FullName + "\"", Color.DeepPink);
-					continue;
-				}
+//				var year = int.Parse(match.Groups["year"].Value);
+//				var month = int.Parse(match.Groups["month"].Value);
+//				var day = int.Parse(match.Groups["day"].Value);
+//				var hour = int.Parse(match.Groups["hour"].Value);
+//				var min = int.Parse(match.Groups["min"].Value);
+//				var sec = int.Parse(match.Groups["sec"].Value);
 
-				using var fileReader = jsonFileInfo.OpenText();
+//				var dateTime = new DateTime(year, month, day, hour, min, sec);
 
-				var fileContent = fileReader.ReadToEnd();
+//				if (dateTime < userJoinDate)
+//				{
+//					continue;
+//				}
 
-				var statsFile = TenchiHistoricalStatisticsFile.FromJson(fileContent);
+//				var jsonFile = subDirectory.FullName + @"\league.json";
+//				var jsonFileInfo = new FileInfo(jsonFile);
 
-				if (!statsFile.Success)
-				{
-					XConsole.WriteLine(" statsFile.Success = false!", Color.DeepPink);
-					continue;
-				}
+//				if (!jsonFileInfo.Exists)
+//				{
+//					XConsole.WriteLine(" Cannot find path: \"" + jsonFileInfo.FullName + "\"", Color.DeepPink);
+//					continue;
+//				}
 
-				var record = statsFile.UserStats.FirstOrDefault(
-					t => t.UserID == userInfo.TetrioUserID);
+//				using var fileReader = jsonFileInfo.OpenText();
 
-				if (record != null)
-				{
-					userDataInfo.Add(dateTime, record);
+//				var fileContent = fileReader.ReadToEnd();
 
-					if (verbose)
-					{
-						var tl = record.League;
+//				var statsFile = TenchiHistoricalStatisticsFile.FromJson(fileContent);
 
-						XConsole
-							.Outdent()
-							.BeginJsonSession()
-							.WriteCode("{", JsonCodeKind.Brace);
+//				if (!statsFile.Success)
+//				{
+//					XConsole.WriteLine(" statsFile.Success = false!", Color.DeepPink);
+//					continue;
+//				}
 
-						XConsole.BeginJsonSession()
-							.WriteProperty(dateTime, t => t, t => t.ToString("u"), "DateTime")
-							.WriteProperty(record, t => t.Role)
-							.WriteProperty(record, t => t.XP)
-							//.WriteProperty(stats, t => t.TimeStamp)
-							.WriteCode("  ", JsonCodeKind.Brace)
-							.WriteCode("TetraLeagueStats", JsonCodeKind.Attribute)
-							.WriteCode(": {", JsonCodeKind.Brace);
+//				var record = statsFile.UserStats.FirstOrDefault(
+//					t => t.UserID == userInfo.TetrioUserID);
 
-						XConsole
-							.Indent()
-							.BeginJsonSession()
-							.WriteProperty(tl, t => t.GamesPlayed)
-							.WriteProperty(tl, t => t.GamesWon)
-							.WriteProperty(tl, t => t.TLRating) //, propertyName: "TR")
-							.WriteProperty(tl, t => t.GlickoRating) //, propertyName: "Glicko")
-							.WriteProperty(tl, t => t.GlickoRatingDeviation) //, propertyName: "RD")
-							.WriteProperty(tl, t => t.UserRank) //, propertyName: "Rank")
-							.WriteProperty(tl, t => t.AverageRollingAPM) //, propertyName: "APM")
-							.WriteProperty(tl, t => t.AverageRollingPPS) //, propertyName: "PPS")
-							.WriteProperty(tl, t => t.AverageRollingVSScore); //, propertyName: "VS");
+//				if (record != null)
+//				{
+//					userDataInfo.Add(dateTime, record);
 
-						XConsole
-							.Outdent()
-							.BeginJsonSession()
-							.WriteCode("  }\n}", JsonCodeKind.Brace);
+//					if (verbose)
+//					{
+//						var tl = record.League;
 
-						XConsole
-							.WriteLine();
-					}
-				}
-				else
-				{
-					XConsole.WriteLine($" No record for user \"{username}\" in {dateTime:u}", Color.MediumPurple);
-				}
-			}
+//						XConsole
+//							.Outdent()
+//							.BeginJsonSession()
+//							.WriteCode("{", JsonCodeKind.Brace);
 
-			XConsole.WriteLine("Done.", Color.MediumSpringGreen);
+//						XConsole.BeginJsonSession()
+//							.WriteProperty(dateTime, t => t, t => t.ToString("u"), "DateTime")
+//							.WriteProperty(record, t => t.Role)
+//							.WriteProperty(record, t => t.XP)
+//							//.WriteProperty(stats, t => t.TimeStamp)
+//							.WriteCode("  ", JsonCodeKind.Brace)
+//							.WriteCode("TetraLeagueStats", JsonCodeKind.Attribute)
+//							.WriteCode(": {", JsonCodeKind.Brace);
 
-			XConsole.WriteLine("-----------------------", Color.MediumSpringGreen);
+//						XConsole
+//							.Indent()
+//							.BeginJsonSession()
+//							.WriteProperty(tl, t => t.GamesPlayed)
+//							.WriteProperty(tl, t => t.GamesWon)
+//							.WriteProperty(tl, t => t.TLRating) //, propertyName: "TR")
+//							.WriteProperty(tl, t => t.GlickoRating) //, propertyName: "Glicko")
+//							.WriteProperty(tl, t => t.GlickoRatingDeviation) //, propertyName: "RD")
+//							.WriteProperty(tl, t => t.UserRank) //, propertyName: "Rank")
+//							.WriteProperty(tl, t => t.AverageRollingAPM) //, propertyName: "APM")
+//							.WriteProperty(tl, t => t.AverageRollingPPS) //, propertyName: "PPS")
+//							.WriteProperty(tl, t => t.AverageRollingVSScore); //, propertyName: "VS");
 
-			XConsole.WriteLine("Overall:", Color.MediumSpringGreen)
-				.WriteLine();
+//						XConsole
+//							.Outdent()
+//							.BeginJsonSession()
+//							.WriteCode("  }\n}", JsonCodeKind.Brace);
 
-			foreach (var userRecord in userDataInfo.OrderBy(t => t.Key))
-			{
-				var record = userRecord.Value;
-				var tl = userRecord.Value.League;
+//						XConsole
+//							.WriteLine();
+//					}
+//				}
+//				else
+//				{
+//					XConsole.WriteLine($" No record for user \"{username}\" in {dateTime:u}", Color.MediumPurple);
+//				}
+//			}
 
-				XConsole
-					.Write($"{userRecord.Key}, ")
-					.Write($"{record.Role}, ")
-					.Write($"{record.XP}, ")
-					.Write($"{tl.GamesPlayed}, ")
-					.Write($"{tl.GamesWon}, ")
-					.Write($"{tl.TLRating}, ")
-					.Write($"{tl.GlickoRating}, ")
-					.Write($"{tl.GlickoRatingDeviation}, ")
-					.Write($"{tl.UserRank}, ")
-					.Write($"{tl.AverageRollingAPM}, ")
-					.Write($"{tl.AverageRollingPPS}, ")
-					.Write($"{tl.AverageRollingVSScore}, ")
-					.WriteLine()
-					.WriteLine();
-			}
-		}
+//			XConsole.WriteLine("Done.", Color.MediumSpringGreen);
 
-		public override void Dispose()
-		{
-			_client.Dispose();
-			base.Dispose();
-		}
-	}
-}
+//			XConsole.WriteLine("-----------------------", Color.MediumSpringGreen);
+
+//			XConsole.WriteLine("Overall:", Color.MediumSpringGreen)
+//				.WriteLine();
+
+//			foreach (var userRecord in userDataInfo.OrderBy(t => t.Key))
+//			{
+//				var record = userRecord.Value;
+//				var tl = userRecord.Value.League;
+
+//				XConsole
+//					.Write($"{userRecord.Key}, ")
+//					.Write($"{record.Role}, ")
+//					.Write($"{record.XP}, ")
+//					.Write($"{tl.GamesPlayed}, ")
+//					.Write($"{tl.GamesWon}, ")
+//					.Write($"{tl.TLRating}, ")
+//					.Write($"{tl.GlickoRating}, ")
+//					.Write($"{tl.GlickoRatingDeviation}, ")
+//					.Write($"{tl.UserRank}, ")
+//					.Write($"{tl.AverageRollingAPM}, ")
+//					.Write($"{tl.AverageRollingPPS}, ")
+//					.Write($"{tl.AverageRollingVSScore}, ")
+//					.WriteLine()
+//					.WriteLine();
+//			}
+//		}
+
+//		public override void Dispose()
+//		{
+//			_client.Dispose();
+//			base.Dispose();
+//		}
+//	}
+//}

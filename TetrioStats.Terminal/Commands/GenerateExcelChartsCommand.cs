@@ -1,280 +1,280 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using Ccr.Std.Core.Extensions;
-using Ccr.Terminal.Application;
-using OfficeOpenXml;
-using OfficeOpenXml.Drawing.Chart;
-using TetrioStats.Api;
-using TetrioStats.Data.Context;
-using TetrioStats.Data.Domain;
-using TetrioStats.Terminal.Extensions;
-using static Ccr.Terminal.ExtendedConsole;
+﻿//using System;
+//using System.Collections.Generic;
+//using System.Drawing;
+//using System.IO;
+//using System.Linq;
+//using Ccr.Std.Core.Extensions;
+//using Ccr.Terminal.Application;
+//using OfficeOpenXml;
+//using OfficeOpenXml.Drawing.Chart;
+//using TetrioStats.Api;
+//using TetrioStats.Data.Context;
+//using TetrioStats.Data.Domain;
+//using TetrioStats.Terminal.Extensions;
+//using static Ccr.Terminal.ExtendedConsole;
 
-namespace TetrioStats.Terminal.Commands
-{
-	public class GenerateExcelChartsCommand
-		: TerminalCommand<string>
-	{
-		private static readonly TetrioApiClient _client = new TetrioApiClient();
-		private static readonly CoreContext _coreContext = new CoreContext();
+//namespace TetrioStats.Terminal.Commands
+//{
+//	public class GenerateExcelChartsCommand
+//		: TerminalCommand<string>
+//	{
+//		private static readonly TetrioApiClient _client = new();
+//		private static readonly CoreContext _coreContext = new();
 
-		private static readonly IReadOnlyList<double> _base10List =
-			new List<double>
-			{
-				0.001,
-				0.01,
-				0.1,
-				1,
-				10,
-				100,
-				1000,
-			};
+//		private static readonly IReadOnlyList<double> _base10List =
+//			new List<double>
+//			{
+//				0.001,
+//				0.01,
+//				0.1,
+//				1,
+//				10,
+//				100,
+//				1000,
+//			};
 
-		public override string CommandName => "gen-excel";
+//		public override string CommandName => "gen-excel";
 
-		public override string ShortCommandName => "xl";
-
-
-		private static double rounded;
-
-		public override void Execute(string args)
-		{
-			var extendedStats = XConsole.PromptYesNo("Query extended stats?");
-
-			XConsole.Write(" Enter a username or userID to track: ", Color.MediumTurquoise);
-
-			var userName = XConsole.ReadLine();
-			userName = userName.ToLower();
-
-			var userInfo = _client.ResolveUser(userName);
-
-			var userData = _coreContext.TLStatsEntries
-				.Where(t => t.UserID == userInfo.TetrioUserID)
-				.OrderBy(t => t.DateTimeUtc)
-				.ToList();
-
-			var templateFile = new FileInfo(
-				extendedStats
-					? @"Y:/template-complex.xlsx" 
-					: @"Y:/template.xlsx");
-
-			var file = templateFile.CopyTo($@"Y:\{userName}-tetriostats{(extendedStats ? "-extended" : "")}.xlsx", true);
-
-			ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-
-			using var pck = new ExcelPackage(file);
-			var workbook = pck.Workbook;
-			var dataWorksheet = workbook.Worksheets["data"];
-
-			var tlDataTable = dataWorksheet.Tables["TLData"];
-
-			var dataCells = dataWorksheet.Cells[$"data!$A$2:$B$20000"];
-			dataCells.Clear();
-
-			var graphsWorksheet = workbook.Worksheets["graphs"];
-
-			var titleCell = graphsWorksheet.Cells[$"F6"];
-			titleCell.Value = $"tetr.io - trending statistics - {userName}";
-
-			var row = 0;
-
-			var startCell = dataWorksheet.Cells["A2"];
-
-			var commonXInterval = userData.Count / 20d;
-			rounded = commonXInterval.Floor();
-
-			if (rounded == 0)
-			{
-				commonXInterval = userData.Count / 10d;
-				rounded = commonXInterval.Floor();
-			}
+//		public override string ShortCommandName => "xl";
 
 
-			foreach (var dataRecord in userData)
-			{
-				startCell.Offset(row, 0).Value = $"{dataRecord.DateTimeUtc:yyyy-MM-dd HH}";
+//		private static double rounded;
 
-				if (dataRecord.TR.HasValue)
-					startCell.Offset(row, 1).Value = dataRecord.TR.Value.Round(2);
+//		public override void Execute(string args)
+//		{
+//			var extendedStats = XConsole.PromptYesNo("Query extended stats?");
 
-				if (dataRecord.GP.HasValue)
-					startCell.Offset(row, 2).Value = dataRecord.GP.Value;
+//			XConsole.Write(" Enter a username or userID to track: ", Color.MediumTurquoise);
 
-				if (dataRecord.GW.HasValue)
-					startCell.Offset(row, 3).Value = dataRecord.GW.Value;
+//			var userName = XConsole.ReadLine();
+//			userName = userName.ToLower();
 
-				if (dataRecord.GP.HasValue && dataRecord.GW.HasValue)
-				{
-					var gw_d = (double)dataRecord.GP.Value;
-					var wp = (dataRecord.GW.Value / gw_d) * 100;
+//			var userInfo = _client.ResolveUser(userName);
 
-					startCell.Offset(row, 4).Value = wp.Round(2);
-				}
+//			var userData = _coreContext.TLStatsEntries
+//				.Where(t => t.UserID == userInfo.TetrioUserID)
+//				.OrderBy(t => t.DateTimeUtc)
+//				.ToList();
 
-				if (dataRecord.Glicko.HasValue)
-					startCell.Offset(row, 5).Value = dataRecord.Glicko.Value;
+//			var templateFile = new FileInfo(
+//				extendedStats
+//					? @"Y:/template-complex.xlsx" 
+//					: @"Y:/template.xlsx");
 
-				startCell.Offset(row, 6).Value = dataRecord.UserRank.ToUpper();
+//			var file = templateFile.CopyTo($@"Y:\{userName}-tetriostats{(extendedStats ? "-extended" : "")}.xlsx", true);
 
-				if (dataRecord.APM.HasValue)
-					startCell.Offset(row, 7).Value = dataRecord.APM.Value;
+//			ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
-				if (dataRecord.PPS.HasValue)
-					startCell.Offset(row, 8).Value = dataRecord.PPS.Value;
+//			using var pck = new ExcelPackage(file);
+//			var workbook = pck.Workbook;
+//			var dataWorksheet = workbook.Worksheets["data"];
 
-				if (dataRecord.VS.HasValue)
-					startCell.Offset(row, 9).Value = dataRecord.VS.Value;
+//			var tlDataTable = dataWorksheet.Tables["TLData"];
 
-				if (extendedStats)
-				{
-					var dataWrapper = new TLStatsEntryWrapper(dataRecord);
-					var sheetBotCalc = new SheetBotExtendedStatsCalculator(dataWrapper);
+//			var dataCells = dataWorksheet.Cells[$"data!$A$2:$B$20000"];
+//			dataCells.Clear();
 
-					startCell.Offset(row, 10).Value = sheetBotCalc.AttackPerPiece;//.Round(2);
+//			var graphsWorksheet = workbook.Worksheets["graphs"];
 
-					if (dataWrapper.HasVS)
-					{
-						startCell.Offset(row, 11).Value = sheetBotCalc.DownStackPerSecond;//.Round(4);
-						startCell.Offset(row, 12).Value = sheetBotCalc.DownStackPerPiece;//.Round(4);
-						startCell.Offset(row, 13).Value = sheetBotCalc.DownStackAndAttackPerPiece;//.Round(6);
-						startCell.Offset(row, 14).Value = sheetBotCalc.CheeseIndex;//.Round(4);
-						startCell.Offset(row, 15).Value = sheetBotCalc.GarbageEfficiency;//.Round(4);
-						startCell.Offset(row, 16).Value = sheetBotCalc.Area;//.Round(4);
-						startCell.Offset(row, 17).Value = sheetBotCalc.NyaAttacksPerPiece;//.Round(4);
-					}
-				}
-				row++;
-			}
+//			var titleCell = graphsWorksheet.Cells[$"F6"];
+//			titleCell.Value = $"tetr.io - trending statistics - {userName}";
+
+//			var row = 0;
+
+//			var startCell = dataWorksheet.Cells["A2"];
+
+//			var commonXInterval = userData.Count / 20d;
+//			rounded = commonXInterval.Floor();
+
+//			if (rounded == 0)
+//			{
+//				commonXInterval = userData.Count / 10d;
+//				rounded = commonXInterval.Floor();
+//			}
 
 
-			var lastIndex = userData.Count + 1;
+//			foreach (var dataRecord in userData)
+//			{
+//				startCell.Offset(row, 0).Value = $"{dataRecord.DateTimeUtc:yyyy-MM-dd HH}";
 
-			ConfigureChart(workbook, "TRChart", "A", "B", lastIndex, Color.FromArgb(246, 58, 170));
-			ConfigureChart(workbook, "PPSChart", "A", "I", lastIndex, Color.FromArgb(91, 155, 213));
-			ConfigureChart(workbook, "VSChart", "A", "J", lastIndex, Color.FromArgb(240, 64, 108));
-			ConfigureChart(workbook, "GlickoChart", "A", "F", lastIndex, Color.FromArgb(255, 192, 0));
-			ConfigureChart(workbook, "APMChart", "A", "H", lastIndex, Color.FromArgb(110, 254, 158));
-			ConfigureChart(workbook, "WRChart", "A", "E", lastIndex, Color.FromArgb(189, 46, 218));
+//				if (dataRecord.TR.HasValue)
+//					startCell.Offset(row, 1).Value = dataRecord.TR.Value.Round(2);
+
+//				if (dataRecord.GP.HasValue)
+//					startCell.Offset(row, 2).Value = dataRecord.GP.Value;
+
+//				if (dataRecord.GW.HasValue)
+//					startCell.Offset(row, 3).Value = dataRecord.GW.Value;
+
+//				if (dataRecord.GP.HasValue && dataRecord.GW.HasValue)
+//				{
+//					var gw_d = (double)dataRecord.GP.Value;
+//					var wp = (dataRecord.GW.Value / gw_d) * 100;
+
+//					startCell.Offset(row, 4).Value = wp.Round(2);
+//				}
+
+//				if (dataRecord.Glicko.HasValue)
+//					startCell.Offset(row, 5).Value = dataRecord.Glicko.Value;
+
+//				startCell.Offset(row, 6).Value = dataRecord.UserRank.ToUpper();
+
+//				if (dataRecord.APM.HasValue)
+//					startCell.Offset(row, 7).Value = dataRecord.APM.Value;
+
+//				if (dataRecord.PPS.HasValue)
+//					startCell.Offset(row, 8).Value = dataRecord.PPS.Value;
+
+//				if (dataRecord.VS.HasValue)
+//					startCell.Offset(row, 9).Value = dataRecord.VS.Value;
+
+//				if (extendedStats)
+//				{
+//					var dataWrapper = new TLStatsEntryWrapper(dataRecord);
+//					var sheetBotCalc = new SheetBotExtendedStatsCalculator(dataWrapper);
+
+//					startCell.Offset(row, 10).Value = sheetBotCalc.AttackPerPiece;//.Round(2);
+
+//					if (dataWrapper.HasVS)
+//					{
+//						startCell.Offset(row, 11).Value = sheetBotCalc.DownStackPerSecond;//.Round(4);
+//						startCell.Offset(row, 12).Value = sheetBotCalc.DownStackPerPiece;//.Round(4);
+//						startCell.Offset(row, 13).Value = sheetBotCalc.DownStackAndAttackPerPiece;//.Round(6);
+//						startCell.Offset(row, 14).Value = sheetBotCalc.CheeseIndex;//.Round(4);
+//						startCell.Offset(row, 15).Value = sheetBotCalc.GarbageEfficiency;//.Round(4);
+//						startCell.Offset(row, 16).Value = sheetBotCalc.Area;//.Round(4);
+//						startCell.Offset(row, 17).Value = sheetBotCalc.NyaAttacksPerPiece;//.Round(4);
+//					}
+//				}
+//				row++;
+//			}
+
+
+//			var lastIndex = userData.Count + 1;
+
+//			ConfigureChart(workbook, "TRChart", "A", "B", lastIndex, Color.FromArgb(246, 58, 170));
+//			ConfigureChart(workbook, "PPSChart", "A", "I", lastIndex, Color.FromArgb(91, 155, 213));
+//			ConfigureChart(workbook, "VSChart", "A", "J", lastIndex, Color.FromArgb(240, 64, 108));
+//			ConfigureChart(workbook, "GlickoChart", "A", "F", lastIndex, Color.FromArgb(255, 192, 0));
+//			ConfigureChart(workbook, "APMChart", "A", "H", lastIndex, Color.FromArgb(110, 254, 158));
+//			ConfigureChart(workbook, "WRChart", "A", "E", lastIndex, Color.FromArgb(189, 46, 218));
 			
-			if (extendedStats)
-			{
-				ConfigureChart(workbook, "APPChart", "A", "K", lastIndex, Color.FromArgb(255, 192, 0));
-				ConfigureChart(workbook, "DSPSChart", "A", "L", lastIndex, Color.FromArgb(110, 254, 158));
-				ConfigureChart(workbook, "DSPPChart", "A", "M", lastIndex, Color.FromArgb(189, 46, 218));
+//			if (extendedStats)
+//			{
+//				ConfigureChart(workbook, "APPChart", "A", "K", lastIndex, Color.FromArgb(255, 192, 0));
+//				ConfigureChart(workbook, "DSPSChart", "A", "L", lastIndex, Color.FromArgb(110, 254, 158));
+//				ConfigureChart(workbook, "DSPPChart", "A", "M", lastIndex, Color.FromArgb(189, 46, 218));
 
-				ConfigureChart(workbook, "DSAPPPPChart", "A", "N", lastIndex, Color.FromArgb(255, 192, 0));
-				ConfigureChart(workbook, "CIChart", "A", "O", lastIndex, Color.FromArgb(110, 254, 158));
-				ConfigureChart(workbook, "GEChart", "A", "P", lastIndex, Color.FromArgb(189, 46, 218));
+//				ConfigureChart(workbook, "DSAPPPPChart", "A", "N", lastIndex, Color.FromArgb(255, 192, 0));
+//				ConfigureChart(workbook, "CIChart", "A", "O", lastIndex, Color.FromArgb(110, 254, 158));
+//				ConfigureChart(workbook, "GEChart", "A", "P", lastIndex, Color.FromArgb(189, 46, 218));
 
-				ConfigureChart(workbook, "AreaChart", "A", "Q", lastIndex, Color.FromArgb(255, 192, 0));
-				ConfigureChart(workbook, "NAPPChart", "A", "R", lastIndex, Color.FromArgb(110, 254, 158));
-			}
+//				ConfigureChart(workbook, "AreaChart", "A", "Q", lastIndex, Color.FromArgb(255, 192, 0));
+//				ConfigureChart(workbook, "NAPPChart", "A", "R", lastIndex, Color.FromArgb(110, 254, 158));
+//			}
 
-			static void ConfigureChart(
-				ExcelWorkbook workbook,
-				string chartName,
-				string xColumn,
-				string yColumn,
-				int lastIndex,
-				Color lineColor)
-			{
-				var chartsWorksheet = workbook.Worksheets["graphs"];
+//			static void ConfigureChart(
+//				ExcelWorkbook workbook,
+//				string chartName,
+//				string xColumn,
+//				string yColumn,
+//				int lastIndex,
+//				Color lineColor)
+//			{
+//				var chartsWorksheet = workbook.Worksheets["graphs"];
 
-				var trChartBase = chartsWorksheet.Drawings[chartName];
-				var trChart = trChartBase.As<ExcelLineChart>();
+//				var trChartBase = chartsWorksheet.Drawings[chartName];
+//				var trChart = trChartBase.As<ExcelLineChart>();
 
-				if (trChart.Series.Any())
-					trChart.Series.Delete(0);
+//				if (trChart.Series.Any())
+//					trChart.Series.Delete(0);
 
-				//=graphs!$A$2:$B$330
-				var yRange = $"data!{yColumn}2:{yColumn}{lastIndex}";
-				var xRange = $"data!{xColumn}2:{xColumn}{lastIndex}";
+//				//=graphs!$A$2:$B$330
+//				var yRange = $"data!{yColumn}2:{yColumn}{lastIndex}";
+//				var xRange = $"data!{xColumn}2:{xColumn}{lastIndex}";
 
-				var rangeSeries = trChart.Series.Add(yRange, xRange);
+//				var rangeSeries = trChart.Series.Add(yRange, xRange);
 
-				rangeSeries.Border.Fill.Color = lineColor;
-				rangeSeries.Border.Width = 1.5;
-				rangeSeries.Effect.Glow.Radius = 0;
-				//rangeSeries.Effect.SetPresetGlow(ePresetExcelGlowType.None);
-				//rangeSeries.Effect.SetPresetShadow(ePresetExcelShadowType.None);
-				//rangeSeries.Effect.SetPresetSoftEdges(ePresetExcelSoftEdgesType.None);
-				//rangeSeries.Effect.SetPresetReflection(ePresetExcelReflectionType.None);
-
-
-				rangeSeries.Smooth = true;
-
-				var dataWorksheet = workbook.Worksheets["data"];
-
-				var yCells = dataWorksheet.Cells[yRange];
-				var xCells = dataWorksheet.Cells[xRange];
-
-				var yCellValueList = yCells.Select(t => t.GetCellValue<double?>(0, 0)).ToList();
-				//var xCellValueList = xCells.ToList();
-
-				var min = yCellValueList.Min();
-				var max = yCellValueList.Max();
-
-				min *= 0.95;
-				max *= 1.05;
-
-				var value = 11;
-				var precision = 10;
-				var lowerScale = (value - (value % precision));
-				var upperScale = (value + (value % precision));
-
-				Console.WriteLine((lowerScale, upperScale));
+//				rangeSeries.Border.Fill.Color = lineColor;
+//				rangeSeries.Border.Width = 1.5;
+//				rangeSeries.Effect.Glow.Radius = 0;
+//				//rangeSeries.Effect.SetPresetGlow(ePresetExcelGlowType.None);
+//				//rangeSeries.Effect.SetPresetShadow(ePresetExcelShadowType.None);
+//				//rangeSeries.Effect.SetPresetSoftEdges(ePresetExcelSoftEdgesType.None);
+//				//rangeSeries.Effect.SetPresetReflection(ePresetExcelReflectionType.None);
 
 
-				var absoluteYAxisRange = max - min;
-				var yAxisStep = absoluteYAxisRange / 10d;
+//				rangeSeries.Smooth = true;
 
-				var distancesToBase10s = _base10List
-					.Concat(_base10List.Select(t => 2 * t))
-					.Select(t => (base10: t, yAxisStep / t))
-					.ToArray();
+//				var dataWorksheet = workbook.Worksheets["data"];
 
-				trChart.YAxis.MinValue = min;
-				trChart.YAxis.MaxValue = max;
+//				var yCells = dataWorksheet.Cells[yRange];
+//				var xCells = dataWorksheet.Cells[xRange];
 
-				trChart.YAxis.MajorUnit = yAxisStep;
+//				var yCellValueList = yCells.Select(t => t.GetCellValue<double?>(0, 0)).ToList();
+//				//var xCellValueList = xCells.ToList();
 
-				trChart.XAxis.MinValue = null;
-				trChart.XAxis.MaxValue = null;
+//				var min = yCellValueList.Min();
+//				var max = yCellValueList.Max();
 
-				trChart.XAxis.MajorUnit = rounded;
-			}
-			pck.Save();
-		}
+//				min *= 0.95;
+//				max *= 1.05;
 
-		public static void t()
-		{
-			Console.WriteLine($"[min..max] -> [graphMin..graphMax] at precision x");
+//				var value = 11;
+//				var precision = 10;
+//				var lowerScale = (value - (value % precision));
+//				var upperScale = (value + (value % precision));
 
-			GetMinMaxScale(22d, 75d, 10d);
-			GetMinMaxScale(22d, 75d, 100d);
-			GetMinMaxScale(1.7d, 7.5d, 0.5d);
-			GetMinMaxScale(1.234d, 1.238d, 0.01d);
-		}
+//				Console.WriteLine((lowerScale, upperScale));
 
-		public static (double, double) GetMinMaxScale(double min, double max, double scaleStep)
-		{
-			var lowerScale = (min - (min % scaleStep));
-			var upperScale = (max - (max % scaleStep) + scaleStep);
 
-			Console.WriteLine($"[{min}..{max}] -> [{lowerScale}..{upperScale}] at precision {scaleStep}");
+//				var absoluteYAxisRange = max - min;
+//				var yAxisStep = absoluteYAxisRange / 10d;
 
-			return (lowerScale, upperScale);
-		}
+//				var distancesToBase10s = _base10List
+//					.Concat(_base10List.Select(t => 2 * t))
+//					.Select(t => (base10: t, yAxisStep / t))
+//					.ToArray();
 
-	public override void Dispose()
-		{
-			_client.Dispose();
-			_coreContext.Dispose();
+//				trChart.YAxis.MinValue = min;
+//				trChart.YAxis.MaxValue = max;
 
-			base.Dispose();
-		}
-	}
-}
+//				trChart.YAxis.MajorUnit = yAxisStep;
+
+//				trChart.XAxis.MinValue = null;
+//				trChart.XAxis.MaxValue = null;
+
+//				trChart.XAxis.MajorUnit = rounded;
+//			}
+//			pck.Save();
+//		}
+
+//		public static void t()
+//		{
+//			Console.WriteLine($"[min..max] -> [graphMin..graphMax] at precision x");
+
+//			GetMinMaxScale(22d, 75d, 10d);
+//			GetMinMaxScale(22d, 75d, 100d);
+//			GetMinMaxScale(1.7d, 7.5d, 0.5d);
+//			GetMinMaxScale(1.234d, 1.238d, 0.01d);
+//		}
+
+//		public static (double, double) GetMinMaxScale(double min, double max, double scaleStep)
+//		{
+//			var lowerScale = (min - (min % scaleStep));
+//			var upperScale = (max - (max % scaleStep) + scaleStep);
+
+//			Console.WriteLine($"[{min}..{max}] -> [{lowerScale}..{upperScale}] at precision {scaleStep}");
+
+//			return (lowerScale, upperScale);
+//		}
+
+//	public override void Dispose()
+//		{
+//			_client.Dispose();
+//			_coreContext.Dispose();
+
+//			base.Dispose();
+//		}
+//	}
+//}

@@ -42,7 +42,7 @@ namespace TetrioStats.Core.Settings
 			var json = JsonConvert.SerializeObject(@this);
 			var fileInfo = new FileInfo(path);
 
-			if (!fileInfo.Directory.Exists)
+			if (fileInfo.Directory is { Exists: false })
 			{
 				fileInfo.Directory.Create();
 			}

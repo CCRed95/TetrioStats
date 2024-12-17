@@ -17,7 +17,7 @@ namespace TetrioStats.Core.Scheduler
 			: base(requestedTimeToComplete)
 		{
 			RequestedRepeatPeriod = requestedRepeatPeriod;
-			_workerThread = new Thread(ExecutionWorker);
+			_workerThread = new(ExecutionWorker);
 		}
 
 
@@ -29,7 +29,7 @@ namespace TetrioStats.Core.Scheduler
 			if (_isRunning)
 				return;
 
-			_workerThread = new Thread(ExecutionWorker);
+			_workerThread = new(ExecutionWorker);
 			_workerThread.Start();
 
 			_isRunning = true;
@@ -37,11 +37,12 @@ namespace TetrioStats.Core.Scheduler
 
 		public void Stop()
 		{
-			if (_isRunning)
-			{
-				var joinResult = _workerThread.Join(2000);
-				_isRunning = false;
-			}
+			if (!_isRunning)
+				return;
+
+			var joinResult = _workerThread.Join(2000);
+
+			_isRunning = false;
 		}
 	}
 }
