@@ -37,7 +37,7 @@ public class UserInfo
 	/// </summary>
 	[JsonProperty("ts")]
 	[CanBeNull]
-	public string Timestamp { get; set; }
+	public DateTime? Timestamp { get; set; }
 
 	/// <summary>
 	/// The bot master associated with the user, if any.
@@ -62,19 +62,20 @@ public class UserInfo
 	/// The total number of games played by the user.
 	/// </summary>
 	[JsonProperty("gamesplayed")]
-	public long GamesPlayed { get; set; }
+	public int GamesPlayed { get; set; }
 
 	/// <summary>
 	/// The total number of games won by the user.
 	/// </summary>
 	[JsonProperty("gameswon")]
-	public long GamesWon { get; set; }
+	public int GamesWon { get; set; }
 
 	/// <summary>
 	/// The total time spent playing games by the user, in seconds.
 	/// </summary>
 	[JsonProperty("gametime")]
-	public double GameTime { get; set; }
+	[JsonConverter(typeof(SecondsToTimeSpanConverter))]
+	public TimeSpan GameTime { get; set; }
 
 	/// <summary>
 	/// The country the user is associated with, if available.
@@ -99,7 +100,7 @@ public class UserInfo
 	/// The supporter's tier.
 	/// </summary>
 	[JsonProperty("supporter_tier")]
-	public long SupporterTier { get; set; }
+	public int SupporterTier { get; set; }
 
 	/// <summary>
 	/// The revision number of the user's avatar, if any.
@@ -130,7 +131,7 @@ public class UserInfo
 	/// The number of friends the user has, if available.
 	/// </summary>
 	[JsonProperty("friend_count")]
-	public long? FriendCount { get; set; }
+	public int? FriendCount { get; set; }
 
 	/// <summary>
 	/// The user's special distinguishing details, if any.
@@ -143,13 +144,13 @@ public class UserInfo
 	/// The achievements associated with the user.
 	/// </summary>
 	[JsonProperty("achievements")]
-	public List<long> Achievements { get; set; }
+	public List<int> Achievements { get; set; }
 
 	/// <summary>
 	/// The user's achievement rank.
 	/// </summary>
 	[JsonProperty("ar")]
-	public long AchievementRank { get; set; }
+	public int AchievementRank { get; set; }
 
 	/// <summary>
 	/// The user's achievement rank counts.
@@ -180,7 +181,6 @@ public class UserBadge
 	/// The timestamp associated with the badge, if any.
 	/// </summary>
 	[JsonProperty("ts")]
-	[JsonConverter(typeof(CustomUnixDateTimeConverter))]
 	public DateTime? Timestamp { get; set; }
 
 	/// <summary>
@@ -309,73 +309,73 @@ public class UserArCounts
 	/// The count of Bronze achievements.
 	/// </summary>
 	[JsonProperty("1")]
-	public long? Bronze { get; set; }
+	public int? Bronze { get; set; }
 
 	/// <summary>
 	/// The count of Silver achievements.
 	/// </summary>
 	[JsonProperty("2")]
-	public long? Silver { get; set; }
+	public int? Silver { get; set; }
 
 	/// <summary>
 	/// The count of Gold achievements.
 	/// </summary>
 	[JsonProperty("3")]
-	public long? Gold { get; set; }
+	public int? Gold { get; set; }
 
 	/// <summary>
 	/// The count of Platinum achievements.
 	/// </summary>
 	[JsonProperty("4")]
-	public long? Platinum { get; set; }
+	public int? Platinum { get; set; }
 
 	/// <summary>
 	/// The count of Diamond achievements.
 	/// </summary>
 	[JsonProperty("5")]
-	public long? Diamond { get; set; }
+	public int? Diamond { get; set; }
 
 	/// <summary>
 	/// The count of issued achievements.
 	/// </summary>
 	[JsonProperty("100")]
-	public long? Issued { get; set; }
+	public int? Issued { get; set; }
 
 	/// <summary>
 	/// The count of Top 100 rankings.
 	/// </summary>
 	[JsonProperty("t100")]
-	public long? Top100 { get; set; }
+	public int? Top100 { get; set; }
 
 	/// <summary>
 	/// The count of Top 50 rankings.
 	/// </summary>
 	[JsonProperty("t50")]
-	public long? Top50 { get; set; }
+	public int? Top50 { get; set; }
 
 	/// <summary>
 	/// The count of Top 25 rankings.
 	/// </summary>
 	[JsonProperty("t25")]
-	public long? Top25 { get; set; }
+	public int? Top25 { get; set; }
 
 	/// <summary>
 	/// The count of Top 10 rankings.
 	/// </summary>
 	[JsonProperty("t10")]
-	public long? Top10 { get; set; }
+	public int? Top10 { get; set; }
 
 	/// <summary>
 	/// The count of Top 5 rankings.
 	/// </summary>
 	[JsonProperty("t5")]
-	public long? Top5 { get; set; }
+	public int? Top5 { get; set; }
 
 	/// <summary>
 	/// The count of Top 3 rankings.
 	/// </summary>
 	[JsonProperty("t3")]
-	public long? Top3 { get; set; }
+	public int? Top3 { get; set; }
 }
 
 

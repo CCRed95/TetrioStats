@@ -5,7 +5,6 @@ using Newtonsoft.Json;
 using TetrioStats.Api.Domain.Converters;
 using TetrioStats.Api.Infrastructure;
 
-
 // ReSharper disable StringLiteralTypo
 
 namespace TetrioStats.Api.Domain.Users.Summaries;
@@ -31,14 +30,14 @@ public class LeagueSummaryPast
 	/// The country the user represented at the time.
 	/// </summary>
 	[JsonProperty("country")]
-    [CanBeNull]
-    public string Country { get; set; }
+	[CanBeNull]
+	public string Country { get; set; }
 
 	/// <summary>
 	/// The user's final position in the season's global leaderboards.
 	/// </summary>
 	[JsonProperty("placement")]
-	public long? Placement { get; set; }
+	public int? Placement { get; set; }
 
 	/// <summary>
 	/// Indicates whether the user was ranked at the time of the season's end.
@@ -46,41 +45,41 @@ public class LeagueSummaryPast
 	[JsonProperty("ranked")]
 	public bool Ranked { get; set; }
 
-    /// <summary>
-    /// The amount of TETRA LEAGUE games played by this user.
-    /// </summary>
-    [JsonProperty("gamesplayed")]
-	public long? GamesPlayed { get; set; }
+	/// <summary>
+	/// The amount of TETRA LEAGUE games played by this user.
+	/// </summary>
+	[JsonProperty("gamesplayed")]
+	public int? GamesPlayed { get; set; }
 
 	/// <summary>
 	/// The amount of TETRA LEAGUE games won by this user.
 	/// </summary>
 	[JsonProperty("gameswon")]
-	public long? GamesWon { get; set; }
+	public int? GamesWon { get; set; }
 
 	/// <summary>
 	/// The user's final Glicko-2 rating.
 	/// </summary>
 	[JsonProperty("glicko")]
-	public float? Glicko { get; set; }
+	public double? Glicko { get; set; }
 
 	/// <summary>
 	/// The user's final Glicko-2 Rating Deviation.
 	/// </summary>
 	[JsonProperty("rd")]
-	public float? RatingDeviation { get; set; }
+	public double? RatingDeviation { get; set; }
 
 	/// <summary>
 	/// The user's final TR (Tetra Rating).
 	/// </summary>
 	[JsonProperty("tr")]
-	public float? TR { get; set; }
+	public double? TR { get; set; }
 
 	/// <summary>
 	/// The user's final GLIXARE score (a % chance of beating an average player).
 	/// </summary>
 	[JsonProperty("gxe")]
-	public float? GLIXARE { get; set; }
+	public double? GLIXARE { get; set; }
 
 	/// <summary>
 	/// The user's final letter rank. "z" is unranked.
@@ -92,25 +91,26 @@ public class LeagueSummaryPast
 	/// The user's highest achieved rank in the season.
 	/// </summary>
 	[JsonProperty("bestrank")]
-	public string? BestRank { get; set; }
+	[CanBeNull]
+	public string BestRank { get; set; }
 
 	/// <summary>
 	/// The user's average APM (attack per minute) over the last 10 games in the season.
 	/// </summary>
 	[JsonProperty("apm")]
-	public float APM { get; set; }
+	public double APM { get; set; }
 
 	/// <summary>
 	/// The user's average PPS (pieces per second) over the last 10 games in the season.
 	/// </summary>
 	[JsonProperty("pps")]
-	public float PPS { get; set; }
+	public double PPS { get; set; }
 
 	/// <summary>
 	/// The user's average VS (versus score) over the last 10 games in the season.
 	/// </summary>
 	[JsonProperty("vs")]
-	public float VS { get; set; }
+	public double VS { get; set; }
 }
 
 /// <summary>
@@ -119,37 +119,37 @@ public class LeagueSummaryPast
 public class LeagueSummary
 {
 	/// <summary>
-    /// The amount of seconds this user spent playing, both on and offline. If the user has chosen
-    /// to hide this statistic, it will be -1.
-    /// </summary>
-    [JsonProperty("gametime")]
-    [JsonConverter(typeof(UnixTimeStampConverter))]
-    public TimeSpan GamePlayTime { get; set; }
+	/// The amount of seconds this user spent playing, both on and offline. If the user has chosen
+	/// to hide this statistic, it will be -1.
+	/// </summary>
+	[JsonProperty("gametime")]
+	[JsonConverter(typeof(SecondsToTimeSpanConverter))]
+	public TimeSpan GamePlayTime { get; set; }
 
-    /// <summary>
-    /// The amount of TETRA LEAGUE games played by this user.
-    /// </summary>
-    [JsonProperty("gamesplayed")]
-	public long? GamesPlayed { get; set; }
+	/// <summary>
+	/// The amount of TETRA LEAGUE games played by this user.
+	/// </summary>
+	[JsonProperty("gamesplayed")]
+	public int? GamesPlayed { get; set; }
 
 	/// <summary>
 	/// The amount of TETRA LEAGUE games won by this user.
 	/// </summary>
 	[JsonProperty("gameswon")]
-	public long? GamesWon { get; set; }
+	public int? GamesWon { get; set; }
 
 	/// <summary>
 	/// The user's Glicko-2 rating, or -1 if less than 10 games were played.
 	/// </summary>
 	[JsonProperty("glicko")]
-	public float? Glicko { get; set; }
+	public double? Glicko { get; set; }
 
 	/// <summary>
 	/// The user's Glicko-2 Rating Deviation, or -1 if less than 10 games were played.
 	/// If over 100, this user is unranked.
 	/// </summary>
 	[JsonProperty("rd")]
-	public float? RatingDeviation { get; set; }
+	public double? RatingDeviation { get; set; }
 
 	/// <summary>
 	/// Indicates whether the user's RD is rising (has not played in the last week).
@@ -161,67 +161,70 @@ public class LeagueSummary
 	/// The user's TR (Tetra Rating), or -1 if less than 10 games were played.
 	/// </summary>
 	[JsonProperty("tr")]
-	public float? TR { get; set; }
+	public double? TR { get; set; }
 
 	/// <summary>
 	/// The user's GLIXARE score (a % chance of beating an average player),
 	/// or -1 if less than 10 games were played.
 	/// </summary>
 	[JsonProperty("gxe")]
-	public float? GLIXARE { get; set; }
+	public double? GLIXARE { get; set; }
 
 	/// <summary>
 	/// The user's letter rank. "z" is unranked.
 	/// </summary>
 	[JsonProperty("rank")]
+	[JsonConverter(typeof(UserRankConverter))]
 	public UserRank? Rank { get; set; }
 
 	/// <summary>
 	/// The user's highest achieved rank this season.
 	/// </summary>
 	[JsonProperty("bestrank")]
+	[JsonConverter(typeof(UserRankConverter))]
 	public UserRank? BestRank { get; set; }
 
 	/// <summary>
 	/// The user's average APM (attack per minute) over the last 10 games.
 	/// </summary>
 	[JsonProperty("apm")]
-	public float? APM { get; set; }
+	public double? APM { get; set; }
 
 	/// <summary>
 	/// The user's average PPS (pieces per second) over the last 10 games.
 	/// </summary>
 	[JsonProperty("pps")]
-	public float? PPS { get; set; }
+	public double? PPS { get; set; }
 
 	/// <summary>
 	/// The user's average VS (versus score) over the last 10 games.
 	/// </summary>
 	[JsonProperty("vs")]
-	public float? VS { get; set; }
+	public double? VS { get; set; }
 
 	/// <summary>
 	/// The user's position in global leaderboards, or -1 if not applicable.
 	/// </summary>
 	[JsonProperty("standing")]
-	public long? Standing { get; set; }
+	public int? Standing { get; set; }
 
 	/// <summary>
 	/// The user's position in local leaderboards, or -1 if not applicable.
 	/// </summary>
 	[JsonProperty("standing_local")]
-	public long? LocalStanding { get; set; }
+	public int? LocalStanding { get; set; }
 
 	/// <summary>
 	/// The user's percentile position (0 is best, 1 is worst).
 	/// </summary>
 	[JsonProperty("percentile")]
-	public float? Percentile { get; set; }
+	public double? Percentile { get; set; }
 
 	/// <summary>
 	/// The user's percentile rank, or "z" if not applicable.
 	/// </summary>
 	[JsonProperty("percentile_rank")]
+	[JsonConverter(typeof(UserRankConverter))]
 	public UserRank? PercentileRank { get; set; }
 
 	/// <summary>
@@ -229,6 +232,7 @@ public class LeagueSummary
 	/// (or already at the best rank).
 	/// </summary>
 	[JsonProperty("next_rank")]
+	[JsonConverter(typeof(UserRankConverter))]
 	public UserRank? NextRank { get; set; }
 
 	/// <summary>
@@ -236,6 +240,7 @@ public class LeagueSummary
 	/// (or already at the worst rank).
 	/// </summary>
 	[JsonProperty("prev_rank")]
+	[JsonConverter(typeof(UserRankConverter))]
 	public UserRank? PreviousRank { get; set; }
 
 	/// <summary>
@@ -243,14 +248,14 @@ public class LeagueSummary
 	/// advances the user to the next rank. -1 if unranked (or already at the best rank).
 	/// </summary>
 	[JsonProperty("next_at")]
-	public long? NextAt { get; set; }
+	public int? NextAt { get; set; }
 
 	/// <summary>
 	/// The position of the worst player in the user's current rank. Dropping below this position
 	/// demotes the user to the previous rank. -1 if unranked (or already at the worst rank).
 	/// </summary>
 	[JsonProperty("prev_at")]
-	public long? PreviousAt { get; set; }
+	public int? PreviousAt { get; set; }
 
 	/// <summary>
 	/// The past league summaries by season.

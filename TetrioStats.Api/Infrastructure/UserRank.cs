@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using Newtonsoft.Json;
 
 namespace TetrioStats.Api.Infrastructure;
@@ -8,116 +9,116 @@ namespace TetrioStats.Api.Infrastructure;
 public enum UserRank
 {
 	/// <summary>
-	/// Rank X+.
+	/// Rank D.
 	/// </summary>
-	[JsonProperty("x+")]
-	XPlus,
-
-	/// <summary>
-	/// Rank X.
-	/// </summary>
-	[JsonProperty("x")]
-	X,
-
-	/// <summary>
-	/// Rank U.
-	/// </summary>
-	[JsonProperty("u")]
-	U,
-
-	/// <summary>
-	/// Rank SS.
-	/// </summary>
-	[JsonProperty("ss")]
-	SS,
-
-	/// <summary>
-	/// Rank S+.
-	/// </summary>
-	[JsonProperty("s+")]
-	SPlus,
-
-	/// <summary>
-	/// Rank S.
-	/// </summary>
-	[JsonProperty("s")]
-	S,
-
-	/// <summary>
-	/// Rank S-.
-	/// </summary>
-	[JsonProperty("s-")]
-	SMinus,
-
-	/// <summary>
-	/// Rank A+.
-	/// </summary>
-	[JsonProperty("a+")]
-	APlus,
-
-	/// <summary>
-	/// Rank A.
-	/// </summary>
-	[JsonProperty("a")]
-	A,
-
-	/// <summary>
-	/// Rank A-.
-	/// </summary>
-	[JsonProperty("a-")]
-	AMinus,
-
-	/// <summary>
-	/// Rank B+.
-	/// </summary>
-	[JsonProperty("b+")]
-	BPlus,
-
-	/// <summary>
-	/// Rank B.
-	/// </summary>
-	[JsonProperty("b")]
-	B,
-
-	/// <summary>
-	/// Rank B-.
-	/// </summary>
-	[JsonProperty("b-")]
-	BMinus,
-
-	/// <summary>
-	/// Rank C+.
-	/// </summary>
-	[JsonProperty("c+")]
-	CPlus,
-
-	/// <summary>
-	/// Rank C.
-	/// </summary>
-	[JsonProperty("c")]
-	C,
-
-	/// <summary>
-	/// Rank C-.
-	/// </summary>
-	[JsonProperty("c-")]
-	CMinus,
+	[Description("d")]
+	D,
 
 	/// <summary>
 	/// Rank D+.
 	/// </summary>
-	[JsonProperty("d+")]
+	[Description("d+")]
 	DPlus,
 
 	/// <summary>
-	/// Rank D.
+	/// Rank C-.
 	/// </summary>
-	[JsonProperty("d")]
-	D,
+	[Description("c-")]
+	CMinus,
+
+	/// <summary>
+	/// Rank C.
+	/// </summary>
+	[Description("c")]
+	C,
+
+	/// <summary>
+	/// Rank C+.
+	/// </summary>
+	[Description("c+")]
+	CPlus,
+
+	/// <summary>
+	/// Rank B-.
+	/// </summary>
+	[Description("b-")]
+	BMinus,
+
+	/// <summary>
+	/// Rank B.
+	/// </summary>
+	[Description("b")]
+	B,
+
+	/// <summary>
+	/// Rank B+.
+	/// </summary>
+	[Description("b+")]
+	BPlus,
+
+	/// <summary>
+	/// Rank A-.
+	/// </summary>
+	[Description("a-")]
+	AMinus,
+
+	/// <summary>
+	/// Rank A.
+	/// </summary>
+	[Description("a")]
+	A,
+
+	/// <summary>
+	/// Rank A+.
+	/// </summary>
+	[Description("a+")]
+	APlus,
+
+	/// <summary>
+	/// Rank S-.
+	/// </summary>
+	[Description("s-")]
+	SMinus,
+
+	/// <summary>
+	/// Rank S.
+	/// </summary>
+	[Description("s")]
+	S,
+
+	/// <summary>
+	/// Rank S+.
+	/// </summary>
+	[Description("s+")]
+	SPlus,
+
+	/// <summary>
+	/// Rank SS.
+	/// </summary>
+	[Description("ss")]
+	SS,
+
+	/// <summary>
+	/// Rank U.
+	/// </summary>
+	[Description("u")]
+	U,
+
+	/// <summary>
+	/// Rank X.
+	/// </summary>
+	[Description("x")]
+	X,
+
+	/// <summary>
+	/// Rank X+.
+	/// </summary>
+	[Description("x+")]
+	XPlus,
 
 	/// <summary>
 	/// Rank Z.
 	/// </summary>
-	[JsonProperty("z")]
+	[Description("z")]
 	Z
 }

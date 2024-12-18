@@ -2,40 +2,39 @@
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
-namespace TetrioStats.Data.Context
+namespace TetrioStats.Data.Context;
+
+public abstract class DbContextBase
+	: DbContext
 {
-	public abstract class DbContextBase
-		: DbContext
+	public abstract string DatabaseName { get; }
+
+
+	protected DbContextBase()
 	{
-		public abstract string DatabaseName { get; }
+		Database.Migrate();
+	}
 
 
-		protected DbContextBase()
+	protected override void OnConfiguring(
+		DbContextOptionsBuilder optionsBuilder)
+	{
+		base.OnConfiguring(optionsBuilder);
+
+		const string databaseFolderPath = @"C:\Tetris\Data\";
+
+		var databaseDirectoryInfo = new DirectoryInfo(databaseFolderPath);
+
+		if (!databaseDirectoryInfo.Exists)
+			databaseDirectoryInfo.Create();
+
+		var connectionStringBuilder = new SqliteConnectionStringBuilder
 		{
-			Database.Migrate();
-		}
+			DataSource = $@"{databaseDirectoryInfo.FullName}\{DatabaseName}.db"
+		};
 
+		var connectionString = connectionStringBuilder.ToString();
 
-		protected override void OnConfiguring(
-			DbContextOptionsBuilder optionsBuilder)
-		{
-			base.OnConfiguring(optionsBuilder);
-
-			const string databaseFolderPath = @"C:\Tetris\Data\";
-
-			var databaseDirectoryInfo = new DirectoryInfo(databaseFolderPath);
-
-			if (!databaseDirectoryInfo.Exists)
-				databaseDirectoryInfo.Create();
-
-			var connectionStringBuilder = new SqliteConnectionStringBuilder
-			{
-				DataSource = $@"{databaseDirectoryInfo.FullName}\{DatabaseName}.db"
-			};
-
-			var connectionString = connectionStringBuilder.ToString();
-
-			optionsBuilder.UseSqlite(connectionString);
-		}
+		optionsBuilder.UseSqlite(connectionString);
 	}
 }

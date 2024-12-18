@@ -64,7 +64,7 @@ internal static class TetrioRequestUrls
 			.BuildUrl(false);
 	}
 
-    public static string FetchUserHistoricalLeaderboardUrl(
+	public static string FetchUserHistoricalLeaderboardUrl(
 		LeaderboardKind leaderboard,
 		[NotNull] string season,
 		[CanBeNull] Action<UserLeaderboardParameterBuilder> queryBuilderAction = null)
@@ -201,41 +201,41 @@ internal static class TetrioRequestUrls
 			.BuildUrl(false);
 	}
 
-    public static string FetchAllNewsUrl(
-        int? limit = null)
-    {
-        var fragment = new DomainFragment(chApiDomain)
-            .Builder
-            .WithPath("news")
-            .Build();
+	public static string FetchAllNewsUrl(
+		int? limit = null)
+	{
+		var fragment = new DomainFragment(chApiDomain)
+				.Builder
+				.WithPath("news")
+				.Build();
 
-        if (limit.HasValue)
-            fragment += $"?limit={limit.Value}";
+		if (limit.HasValue)
+			fragment += $"?limit={limit.Value}";
 
-        return fragment;
-    }
+		return fragment;
+	}
 
-    public static string FetchLatestNewsInStreamUrl(
-        string stream,
-        int? limit = null)
-    {
-        var fragment = new DomainFragment(chApiDomain)
-            .Builder
-            .WithPath("news")
-            .WithPath(stream);
+	public static string FetchLatestNewsInStreamUrl(
+		string stream,
+		int? limit = null)
+	{
+		var fragment = new DomainFragment(chApiDomain)
+			.Builder
+			.WithPath("news")
+			.WithPath(stream);
 
-        if (limit.HasValue)
-        {
-            fragment.WithParameter("limit", limit.Value.ToString());
-        }
-		
-        return fragment.BuildUrl(false);
-    }
+		if (limit.HasValue)
+		{
+			fragment.WithParameter("limit", limit.Value.ToString());
+		}
 
-    public static string FetchUserPersonalRecordsUrl(
-		[NotNull] string userIdOrUsername,
-		GameMode gameMode,
-		Leaderboard leaderboard)
+		return fragment.BuildUrl(false);
+	}
+
+	public static string FetchUserPersonalRecordsUrl(
+	[NotNull] string userIdOrUsername,
+	GameMode gameMode,
+	Leaderboard leaderboard)
 	{
 		userIdOrUsername.IsNotNull(nameof(userIdOrUsername));
 
@@ -295,8 +295,6 @@ internal static class TetrioRequestUrls
 			.WithPath($"{achievementId}")
 			.BuildUrl(false);
 	}
-
-
 
 	public static string FetchRibbonUrl()
 	{

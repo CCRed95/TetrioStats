@@ -1,7 +1,7 @@
+using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using TetrioStats.Api.Infrastructure;
-
 
 // ReSharper disable StringLiteralTypo
 
@@ -16,13 +16,13 @@ public class LeagueRank
 	/// The leaderboard position required to attain this rank.
 	/// </summary>
 	[JsonProperty("pos")]
-	public long Position { get; set; }
+	public int Position { get; set; }
 
 	/// <summary>
 	/// The percentile (0~1) this rank is for.
 	/// </summary>
 	[JsonProperty("percentile")]
-	public float Percentile { get; set; }
+	public double Percentile { get; set; }
 
 	/// <summary>
 	/// The TR required to obtain a leaderboard position that will award this rank.
@@ -58,7 +58,7 @@ public class LeagueRank
 	/// The amount of players with this rank.
 	/// </summary>
 	[JsonProperty("count")]
-	public long Count { get; set; }
+	public int TotalPlayersRanked { get; set; }
 }
 
 
@@ -71,13 +71,90 @@ public class LeagueRanksData
 	/// The total number of players in the league.
 	/// </summary>
 	[JsonProperty("total")]
-	public long Total { get; set; }
+	public int TotalPlayersRanked { get; set; }
+	
+	[JsonProperty("x+")]
+	public LeagueRank XPlus { get; set; }
 
-	/// <summary>
-	/// A dictionary of ranks mapped by UserRank.
-	/// </summary>
-	[JsonProperty("ranks")]
-	public Dictionary<UserRank, LeagueRank> Ranks { get; set; }
+	[JsonProperty("x")]
+	public LeagueRank X { get; set; }
+
+	[JsonProperty("u")]
+	public LeagueRank U { get; set; }
+
+	[JsonProperty("ss")]
+	public LeagueRank SS { get; set; }
+
+	[JsonProperty("s+")]
+	public LeagueRank SPlus { get; set; }
+
+	[JsonProperty("s")]
+	public LeagueRank S { get; set; }
+
+	[JsonProperty("s-")]
+	public LeagueRank SMinus { get; set; }
+
+	[JsonProperty("a+")]
+	public LeagueRank APlus { get; set; }
+
+	[JsonProperty("a")]
+	public LeagueRank A { get; set; }
+
+	[JsonProperty("a-")]
+	public LeagueRank AMinus { get; set; }
+
+	[JsonProperty("b+")]
+	public LeagueRank BPlus { get; set; }
+
+	[JsonProperty("b")]
+	public LeagueRank B { get; set; }
+
+	[JsonProperty("b-")]
+	public LeagueRank BMinus { get; set; }
+
+	[JsonProperty("c+")]
+	public LeagueRank CPlus { get; set; }
+
+	[JsonProperty("c")]
+	public LeagueRank C { get; set; }
+
+	[JsonProperty("c-")]
+	public LeagueRank CMinus { get; set; }
+
+	[JsonProperty("d+")]
+	public LeagueRank DPlus { get; set; }
+
+	[JsonProperty("d")]
+	public LeagueRank D { get; set; }
+
+	[JsonIgnore]
+	public IReadOnlyDictionary<UserRank, LeagueRank> UserRankMapping
+	{
+		get => new Dictionary<UserRank, LeagueRank>
+		{
+			[UserRank.D] = D,
+			[UserRank.DPlus] = DPlus,
+			[UserRank.CMinus] = CMinus,
+			[UserRank.C] = C,
+			[UserRank.CPlus] = CPlus,
+
+			[UserRank.BMinus] = BMinus,
+			[UserRank.B] = B,
+			[UserRank.BPlus] = BPlus,
+			[UserRank.AMinus] = AMinus,
+			[UserRank.A] = A,
+
+			[UserRank.APlus] = APlus,
+			[UserRank.SMinus] = SMinus,
+			[UserRank.S] = S,
+			[UserRank.SPlus] = SPlus,
+			[UserRank.SS] = SS,
+
+			[UserRank.U] = U,
+			[UserRank.X] = X,
+			[UserRank.XPlus] = XPlus
+		};
+	}
 }
 
 
@@ -102,7 +179,7 @@ public class LeagueRanks
 	/// The time at which the data point was created.
 	/// </summary>
 	[JsonProperty("t")]
-	public string Timestamp { get; set; }
+	public DateTime Timestamp { get; set; }
 
 	/// <summary>
 	/// The data point.
