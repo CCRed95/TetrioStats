@@ -602,6 +602,15 @@ public class TetrioNewsApi
 
 public class TetrioUserSummariesApi
 {
+	/// <summary>
+	/// Fetches an object containing all the user's achievements.
+	/// </summary>
+	/// <param name="userIdOrUsername">
+	/// The username or user ID to look up.
+	/// </param>
+	/// <returns>
+	/// Returns an object containing all the user's achievements.
+	/// </returns>
 	public async Task<AchievementsSummaryResponse> FetchAchievementsSummaryAsync(
 		[NotNull] string userIdOrUsername)
 	{
@@ -621,6 +630,15 @@ public class TetrioUserSummariesApi
 		return allSummariesResponse;
 	}
 
+	/// <summary>
+	/// Fetches an object containing all the user's summaries in one.
+	/// </summary>
+	/// <param name="userIdOrUsername">
+	/// The username or user ID to look up.
+	/// </param>
+	/// <returns>
+	/// Returns an object containing all the user's summaries in one.
+	/// </returns>
 	public async Task<AllSummariesResponse> FetchAllSummariesAsync(
 		[NotNull] string userIdOrUsername)
 	{
@@ -640,6 +658,15 @@ public class TetrioUserSummariesApi
 		return allSummariesResponse;
 	}
 
+	/// <summary>
+	/// Fetches an object describing a summary of the user's 40 LINES games.
+	/// </summary>
+	/// <param name="userIdOrUsername">
+	/// The username or user ID to look up.
+	/// </param>
+	/// <returns>
+	/// Returns an object describing a summary of the user's 40 LINES games.
+	/// </returns>
 	public async Task<SprintSummaryResponse> FetchSprintSummaryAsync(
 		[NotNull] string userIdOrUsername)
 	{
@@ -659,6 +686,15 @@ public class TetrioUserSummariesApi
 		return sprintSummaryResponse;
 	}
 
+	/// <summary>
+	/// Fetches an object describing a summary of the user's BLITZ games.
+	/// </summary>
+	/// <param name="userIdOrUsername">
+	/// The username or user ID to look up.
+	/// </param>
+	/// <returns>
+	/// Returns an object describing a summary of the user's BLITZ games.
+	/// </returns>
 	public async Task<BlitzSummaryResponse> FetchBlitzSummaryAsync(
 		[NotNull] string userIdOrUsername)
 	{
@@ -678,6 +714,15 @@ public class TetrioUserSummariesApi
 		return blitzSummaryResponse;
 	}
 
+	/// <summary>
+	/// Fetches an object describing a summary of the user's QUICK PLAY games.
+	/// </summary>
+	/// <param name="userIdOrUsername">
+	/// The username or user ID to look up.
+	/// </param>
+	/// <returns>
+	/// Returns an object describing a summary of the user's QUICK PLAY games.
+	/// </returns>
 	public async Task<ZenithSummaryResponse> FetchZenithSummaryAsync(
 		[NotNull] string userIdOrUsername)
 	{
@@ -697,6 +742,15 @@ public class TetrioUserSummariesApi
 		return zenithSummaryResponse;
 	}
 
+	/// <summary>
+	/// Fetches an object describing a summary of the user's EXPERT QUICK PLAY games.
+	/// </summary>
+	/// <param name="userIdOrUsername">
+	/// The username or user ID to look up.
+	/// </param>
+	/// <returns>
+	/// Returns an object describing a summary of the user's EXPERT QUICK PLAY games.
+	/// </returns>
 	public async Task<ZenithExSummaryResponse> FetchZenithExSummaryAsync(
 		[NotNull] string userIdOrUsername)
 	{
@@ -716,6 +770,15 @@ public class TetrioUserSummariesApi
 		return zenithExSummaryResponse;
 	}
 
+	/// <summary>
+	/// Fetches an object describing a summary of the user's TETRA LEAGUE standing.
+	/// </summary>
+	/// <param name="userIdOrUsername">
+	/// The username or user ID to look up.
+	/// </param>
+	/// <returns>
+	/// Returns an object describing a summary of the user's TETRA LEAGUE standing.
+	/// </returns>
 	public async Task<LeagueSummaryResponse> FetchLeagueSummaryAsync(
 		[NotNull] string userIdOrUsername)
 	{
@@ -735,6 +798,15 @@ public class TetrioUserSummariesApi
 		return leagueSummaryResponse;
 	}
 
+	/// <summary>
+	/// Fetches an object describing a summary of the user's ZEN progress.
+	/// </summary>
+	/// <param name="userIdOrUsername">
+	/// The username or user ID to look up.
+	/// </param>
+	/// <returns>
+	/// Returns an object describing a summary of the user's ZEN progress.
+	/// </returns>
 	public async Task<ZenSummaryResponse> FetchZenSummaryAsync(
 		[NotNull] string userIdOrUsername)
 	{
