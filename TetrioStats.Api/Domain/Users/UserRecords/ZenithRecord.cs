@@ -268,4 +268,4 @@ public class ZenithRecord : PersonalUserRecord
 /// <summary>
 /// Represents a packet containing personal Zenith records.
 /// </summary>
-public class PersonalZenithRecordPacket : TetrioApiResponse<PersonalUserRecord<ZenithRecord>>;
+public class PersonalZenithRecordResponse : TetrioApiResponse<PersonalUserRecord<ZenithRecord>>;

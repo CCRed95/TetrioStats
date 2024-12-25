@@ -31,7 +31,7 @@ public class TetrioGeneralApiTests
             Assert.That(serverStats.Data.UserCount, Is.GreaterThan(9700000L));
             Assert.That(serverStats.Data.AnonCount, Is.GreaterThan(7000000L));
             Assert.That(serverStats.Data.TotalAccounts, Is.GreaterThan(17000000L));
-            Assert.That(serverStats.Data.GameTime, Is.GreaterThan(10000000000.0D));
+            Assert.That(serverStats.Data.GameTime, Is.GreaterThan(TimeSpan.FromDays(1000)));
             Assert.That(serverStats.Data.Inputs, Is.GreaterThan(420000000000L));
         });
     }

@@ -58,7 +58,7 @@
 
 //			var templateFile = new FileInfo(
 //				extendedStats
-//					? @"Y:/template-complex.xlsx" 
+//					? @"Y:/template-complex.xlsx"
 //					: @"Y:/template.xlsx");
 
 //			var file = templateFile.CopyTo($@"Y:\{userName}-tetriostats{(extendedStats ? "-extended" : "")}.xlsx", true);
@@ -158,7 +158,7 @@
 //			ConfigureChart(workbook, "GlickoChart", "A", "F", lastIndex, Color.FromArgb(255, 192, 0));
 //			ConfigureChart(workbook, "APMChart", "A", "H", lastIndex, Color.FromArgb(110, 254, 158));
 //			ConfigureChart(workbook, "WRChart", "A", "E", lastIndex, Color.FromArgb(189, 46, 218));
-			
+
 //			if (extendedStats)
 //			{
 //				ConfigureChart(workbook, "APPChart", "A", "K", lastIndex, Color.FromArgb(255, 192, 0));
@@ -269,9 +269,8 @@
 //			return (lowerScale, upperScale);
 //		}
 
-//	public override void Dispose()
+//		public override void Dispose()
 //		{
-//			_client.Dispose();
 //			_coreContext.Dispose();
 
 //			base.Dispose();

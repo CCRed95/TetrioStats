@@ -13,34 +13,34 @@ namespace TetrioStats.Api.Domain.Users.UserRecords;
 public class LeagueLeaderboardStats
 {
 	[JsonProperty("apm")]
-	public float? APM { get; set; }
+	public double? APM { get; set; }
 
 	[JsonProperty("pps")]
-	public float? PPS { get; set; }
+	public double? PPS { get; set; }
 
 	[JsonProperty("vsscore")]
-	public float? VSScore { get; set; }
+	public double? VSScore { get; set; }
 
 	[JsonProperty("garbagesent")]
-	public float GarbageSent { get; set; }
+	public double GarbageSent { get; set; }
 
 	[JsonProperty("garbagereceived")]
-	public float GarbageReceived { get; set; }
+	public double GarbageReceived { get; set; }
 
 	[JsonProperty("kills")]
-	public float Kills { get; set; }
+	public double Kills { get; set; }
 
 	[JsonProperty("altitude")]
-	public float Altitude { get; set; }
+	public double Altitude { get; set; }
 
 	[JsonProperty("rank")]
-	public float Rank { get; set; }
+	public double Rank { get; set; }
 
 	[JsonProperty("targetingfactor")]
-	public float TargetingFactor { get; set; }
+	public double TargetingFactor { get; set; }
 
 	[JsonProperty("targetinggrace")]
-	public float TargetingGrace { get; set; }
+	public double TargetingGrace { get; set; }
 }
 
 
@@ -99,7 +99,7 @@ public class LeagueLeaderboard
 	/// The player's natural order.
 	/// </summary>
 	[JsonProperty("naturalorder")]
-	public short? NaturalOrder { get; set; }
+	public int? NaturalOrder { get; set; }
 
 	/// <summary>
 	/// List of players shadowing this player.
@@ -123,34 +123,34 @@ public class LeagueLeaderboard
 public class LeagueRoundStats
 {
 	[JsonProperty("apm")]
-	public float APM { get; set; }
+	public double APM { get; set; }
 
 	[JsonProperty("pps")]
-	public float PPS { get; set; }
+	public double PPS { get; set; }
 
 	[JsonProperty("vsscore")]
-	public float VSScore { get; set; }
+	public double VSScore { get; set; }
 
 	[JsonProperty("garbagesent")]
-	public float GarbageSent { get; set; }
+	public double GarbageSent { get; set; }
 
 	[JsonProperty("garbagereceived")]
-	public float GarbageReceived { get; set; }
+	public double GarbageReceived { get; set; }
 
 	[JsonProperty("kills")]
-	public float Kills { get; set; }
+	public double Kills { get; set; }
 
 	[JsonProperty("altitude")]
-	public float Altitude { get; set; }
+	public double Altitude { get; set; }
 
 	[JsonProperty("rank")]
-	public float Rank { get; set; }
+	public double Rank { get; set; }
 
 	[JsonProperty("targetingfactor")]
-	public float TargetingFactor { get; set; }
+	public double TargetingFactor { get; set; }
 
 	[JsonProperty("targetinggrace")]
-	public float TargetingGrace { get; set; }
+	public double TargetingGrace { get; set; }
 }
 
 
@@ -178,7 +178,7 @@ public class LeagueRound
 	public LeagueRoundStats Stats { get; set; }
 
 	[JsonProperty("naturalorder")]
-	public short? NaturalOrder { get; set; }
+	public int? NaturalOrder { get; set; }
 
 	[JsonProperty("shadowedBy")]
 	[ItemCanBeNull]
@@ -235,19 +235,19 @@ public class LeagueRecordUser
 public class LeagueExtrasData
 {
 	[JsonProperty("glicko")]
-	public float Glicko { get; set; }
+	public double Glicko { get; set; }
 
 	[JsonProperty("placement")]
-	public float? Placement { get; set; }
+	public double? Placement { get; set; }
 
 	[JsonProperty("rank")]
 	public UserRank Rank { get; set; }
 
 	[JsonProperty("rd")]
-	public float RatingDeviation { get; set; }
+	public double RatingDeviation { get; set; }
 
 	[JsonProperty("tr")]
-	public float TetraRating { get; set; }
+	public double TetraRating { get; set; }
 }
 
 

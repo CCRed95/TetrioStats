@@ -12,13 +12,13 @@ namespace TetrioStats.Api.Domain.Users.UserRecords;
 public class BlitzAggregateStats
 {
 	[JsonProperty("apm")]
-	public float APM { get; set; }
+	public double APM { get; set; }
 
 	[JsonProperty("pps")]
-	public float PPS { get; set; }
+	public double PPS { get; set; }
 
 	[JsonProperty("vsscore")]
-	public float VSScore { get; set; }
+	public double VSScore { get; set; }
 }
 
 
@@ -50,55 +50,55 @@ public class BlitzTime
 public class BlitzClears
 {
 	[JsonProperty("singles")]
-	public short Singles { get; set; }
+	public int Singles { get; set; }
 
 	[JsonProperty("doubles")]
-	public short Doubles { get; set; }
+	public int Doubles { get; set; }
 
 	[JsonProperty("triples")]
-	public short Triples { get; set; }
+	public int Triples { get; set; }
 
 	[JsonProperty("quads")]
-	public short Quads { get; set; }
+	public int Quads { get; set; }
 
 	[JsonProperty("pentas")]
-	public short? Pentas { get; set; }
+	public int? Pentas { get; set; }
 
 	[JsonProperty("realtspins")]
-	public short RealTSpins { get; set; }
+	public int RealTSpins { get; set; }
 
 	[JsonProperty("minitspins")]
-	public short MiniTSpins { get; set; }
+	public int MiniTSpins { get; set; }
 
 	[JsonProperty("minitspinsingles")]
-	public short MiniTSpinSingles { get; set; }
+	public int MiniTSpinSingles { get; set; }
 
 	[JsonProperty("tspinsingles")]
-	public short TSpinSingles { get; set; }
+	public int TSpinSingles { get; set; }
 
 	[JsonProperty("minitspindoubles")]
-	public short MiniTSpinDoubles { get; set; }
+	public int MiniTSpinDoubles { get; set; }
 
 	[JsonProperty("tspindoubles")]
-	public short TSpinDoubles { get; set; }
+	public int TSpinDoubles { get; set; }
 
 	[JsonProperty("minitspintriples")]
-	public short? MiniTSpinTriples { get; set; }
+	public int? MiniTSpinTriples { get; set; }
 
 	[JsonProperty("tspintriples")]
-	public short TSpinTriples { get; set; }
+	public int TSpinTriples { get; set; }
 
 	[JsonProperty("minitspinquads")]
-	public short? MiniTSpinQuads { get; set; }
+	public int? MiniTSpinQuads { get; set; }
 
 	[JsonProperty("tspinquads")]
-	public short TSpinQuads { get; set; }
+	public int TSpinQuads { get; set; }
 
 	[JsonProperty("tspinpentas")]
-	public short? TSpinPentas { get; set; }
+	public int? TSpinPentas { get; set; }
 
 	[JsonProperty("allclear")]
-	public short AllClear { get; set; }
+	public int AllClear { get; set; }
 }
 
 
@@ -108,25 +108,25 @@ public class BlitzClears
 public class BlitzGarbage
 {
 	[JsonProperty("sent")]
-	public short Sent { get; set; }
+	public int Sent { get; set; }
 
 	[JsonProperty("sent_nomult")]
-	public short? SentNoMulti { get; set; }
+	public int? SentNoMulti { get; set; }
 
 	[JsonProperty("maxspike")]
-	public short? MaxSpike { get; set; }
+	public int? MaxSpike { get; set; }
 
 	[JsonProperty("maxspike_nomult")]
-	public short? MaxSpikeNoMulti { get; set; }
+	public int? MaxSpikeNoMulti { get; set; }
 
 	[JsonProperty("received")]
-	public short Received { get; set; }
+	public int Received { get; set; }
 
 	[JsonProperty("attack")]
-	public short? Attack { get; set; }
+	public int? Attack { get; set; }
 
 	[JsonProperty("cleared")]
-	public short? Cleared { get; set; }
+	public int? Cleared { get; set; }
 }
 
 
@@ -136,13 +136,13 @@ public class BlitzGarbage
 public class BlitzFinesse
 {
 	[JsonProperty("combo")]
-	public short Combo { get; set; }
+	public int Combo { get; set; }
 
 	[JsonProperty("faults")]
-	public short Faults { get; set; }
+	public int Faults { get; set; }
 
 	[JsonProperty("perfectpieces")]
-	public short PerfectPieces { get; set; }
+	public int PerfectPieces { get; set; }
 }
 
 
@@ -218,12 +218,21 @@ public class BlitzStats
 /// </summary>
 public class BlitzResults
 {
+	/// <summary>
+	/// Aggregate stats of the game played.
+	/// </summary>
 	[JsonProperty("aggregatestats")]
 	public BlitzAggregateStats AggregateStats { get; set; }
 
+	/// <summary>
+	/// The final stats of the game played.
+	/// </summary>
 	[JsonProperty("stats")]
 	public BlitzStats Stats { get; set; }
 
+	/// <summary>
+	/// The reason the game has ended.
+	/// </summary>
 	[JsonProperty("gameoverreason")]
 	public string GameOverReason { get; set; }
 }
@@ -234,9 +243,15 @@ public class BlitzResults
 /// </summary>
 public class BlitzRecordUser
 {
+	/// <summary>
+	/// The player's User ID.
+	/// </summary>
 	[JsonProperty("id")]
 	public string Id { get; set; }
 
+	/// <summary>
+	/// The player's username.
+	/// </summary>
 	[JsonProperty("username")]
 	public string Username { get; set; }
 }

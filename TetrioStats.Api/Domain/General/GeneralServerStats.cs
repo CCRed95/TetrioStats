@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
+using TetrioStats.Api.Domain.Converters;
 
 // ReSharper disable StringLiteralTypo
 
@@ -16,7 +18,7 @@ public class GeneralServerStats
 	/// The amount of users created a second (through the last minute).
 	/// </summary>
 	[JsonProperty("usercount_delta")]
-	public float UserCountDelta { get; set; }
+	public double UserCountDelta { get; set; }
 
 	/// <summary>
 	/// The amount of anonymous accounts on the server.
@@ -52,7 +54,7 @@ public class GeneralServerStats
 	/// The amount of games played a second (through the last minute).
 	/// </summary>
 	[JsonProperty("gamesplayed_delta")]
-	public float GamesPlayedDelta { get; set; }
+	public double GamesPlayedDelta { get; set; }
 
 	/// <summary>
 	/// The amount of games played across all users, including both off- and online modes, excluding games that were not completed (e.g. retries)
@@ -61,10 +63,11 @@ public class GeneralServerStats
 	public int GamesFinished { get; set; }
 
 	/// <summary>
-	/// The amount of seconds spent playing across all users, including both off- and online modes.
+	/// The amount of time spent playing across all users, including both off- and online modes.
 	/// </summary>
 	[JsonProperty("gametime")]
-	public float GameTime { get; set; }
+	[JsonConverter(typeof(UnixTimeStampConverter))]
+	public TimeSpan GameTime { get; set; }
 
 	/// <summary>
 	/// The amount of keys pressed across all users, including both off- and online modes.
@@ -78,6 +81,5 @@ public class GeneralServerStats
 	[JsonProperty("piecesplaced")]
 	public int PiecesPlaced { get; set; }
 }
-
 
 public class GeneralServerStatsResponse : TetrioApiResponse<GeneralServerStats>;

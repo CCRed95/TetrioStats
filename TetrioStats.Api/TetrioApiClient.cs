@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Buffers;
-using System.Linq;
 using System.Threading.Tasks;
 using Ccr.Std.Core.Extensions;
 using JetBrains.Annotations;
@@ -37,21 +35,21 @@ public class TetrioApiClient
 	/// Users Client Api
 	/// </summary>
 	public TetrioUsersApi Users { get; } = new();
-	
+
 	/// <summary>
 	/// Records Client Api
 	/// </summary>
 	public TetrioUserPersonalRecordsApi Records { get; } = new();
 
-    /// <summary>
-    /// News Client Api
-    /// </summary>
-    public TetrioNewsApi News { get; } = new();
+	/// <summary>
+	/// News Client Api
+	/// </summary>
+	public TetrioNewsApi News { get; } = new();
 
-    /// <summary>
-    /// Labs Client Api
-    /// </summary>
-    public TetrioLabsApi Labs { get; } = new();
+	/// <summary>
+	/// Labs Client Api
+	/// </summary>
+	public TetrioLabsApi Labs { get; } = new();
 
 	/// <summary>
 	/// Achievements Client Api
@@ -186,25 +184,25 @@ public class TetrioUsersApi
 	}
 
 	/// <summary>
-    /// Fetches an array of historical user blobs fulfilling the search criteria.
-    /// </summary>
-    /// <param name="leaderboard">
-    /// The leaderboard to sort users by. Must be <see cref="LeaderboardKind.League"/>.
-    /// </param>
-    /// <param name="season">
-    /// The season to look up.
-    /// </param>
-    /// <param name="queryBuilderAction">
-    /// The parameter builder actions.
-    /// </param>
-    /// <returns>
-    /// Returns an array of historical user blobs fulfilling the search criteria.
-    /// </returns>
-    /// <exception cref="NotSupportedException">
-    /// Only <see cref="LeaderboardKind.League"/> is currently supported. If the value is anything
-    /// else, then it will throw an exception.
-    /// </exception>
-    public async Task<UserHistoricalLeaderboardResponse> FetchUserHistoricalLeaderboardAsync(
+	/// Fetches an array of historical user blobs fulfilling the search criteria.
+	/// </summary>
+	/// <param name="leaderboard">
+	/// The leaderboard to sort users by. Must be <see cref="LeaderboardKind.League"/>.
+	/// </param>
+	/// <param name="season">
+	/// The season to look up.
+	/// </param>
+	/// <param name="queryBuilderAction">
+	/// The parameter builder actions.
+	/// </param>
+	/// <returns>
+	/// Returns an array of historical user blobs fulfilling the search criteria.
+	/// </returns>
+	/// <exception cref="NotSupportedException">
+	/// Only <see cref="LeaderboardKind.League"/> is currently supported. If the value is anything
+	/// else, then it will throw an exception.
+	/// </exception>
+	public async Task<UserHistoricalLeaderboardResponse> FetchUserHistoricalLeaderboardAsync(
 		LeaderboardKind leaderboard,
 		[NotNull] string season,
 		[CanBeNull] Action<UserLeaderboardParameterBuilder> queryBuilderAction = null)
@@ -243,20 +241,20 @@ public class TetrioUsersApi
 		var response = await httpClient.SendAsync(request);
 		var byteContents = await response.Content.ReadAsByteArrayAsync();
 
-        throw new NotImplementedException();
-        //var ros = new ReadOnlySequence<byte>(byteContents);
+		throw new NotImplementedException();
+		//var ros = new ReadOnlySequence<byte>(byteContents);
 
-        //var json = Pack.ConvertToJson(ros);
+		//var json = Pack.ConvertToJson(ros);
 
-        //var userMeResponseJson = Pack.Unpack<UserMeResponse>(byteContents);//).JsonFromBytes(byteContents)};
-        //var e = byteContents.Aggregate("[", (current, b) => current + ($"{b}, "));
+		//var userMeResponseJson = Pack.Unpack<UserMeResponse>(byteContents);//).JsonFromBytes(byteContents)};
+		//var e = byteContents.Aggregate("[", (current, b) => current + ($"{b}, "));
 
 
-        //var userMeResponse = JsonConvert
-        //	.DeserializeObject<UserMeResponse>(json);
+		//var userMeResponse = JsonConvert
+		//	.DeserializeObject<UserMeResponse>(json);
 
-        //return userMeResponse;
-    }
+		//return userMeResponse;
+	}
 }
 
 
@@ -317,9 +315,15 @@ public class TetrioLabsApi
 	/// <summary>
 	/// Fetches a condensed graph of all the user's records in the provided <paramref name="gameMode"/>.
 	/// </summary>
-	/// <param name="userIdOrUsername"></param>
-	/// <param name="gameMode"></param>
-	/// <returns></returns>
+	/// <param name="userIdOrUsername">
+	/// The lowercase username or user ID to look up.
+	/// </param>
+	/// <param name="gameMode">
+	/// The game mode to look up.
+	/// </param>
+	/// <returns>
+	///	Returns a condensed graph of all the user's records in the provided <paramref name="gameMode"/>.
+	/// </returns>
 	public async Task<ScoreFlowResponse> FetchUserScoreFlow(
 		[NotNull] string userIdOrUsername,
 		GameMode gameMode)
@@ -366,57 +370,234 @@ public class TetrioUserPersonalRecordsApi
 
 		return userPersonalRecords;
 	}
+
+	/// <summary>
+	/// A list of Records representing the user's Sprint history.
+	/// </summary>
+	/// <param name="userIdOrUsername">
+	/// The username or user ID to look up.
+	/// </param>
+	/// <param name="leaderboard">
+	/// The personal leaderboard to look up. 
+	/// </param>
+	/// <returns>
+	/// A list of Records representing the user's Sprint history.
+	/// </returns>
+	public async Task<PersonalSprintRecordResponse> FetchSprintRecordsAsync(
+		[NotNull] string userIdOrUsername,
+		Leaderboard leaderboard)
+	{
+		var url = TetrioRequestUrls.FetchUserPersonalRecordsUrl(
+			userIdOrUsername, GameMode.FortyLines, leaderboard);
+
+		using var httpClient = new TetrioHttpClient();
+		using var request = HttpRequest.Get(url)
+			.WithAuth()
+			.WithJsonAccept();
+
+		var response = await httpClient.SendAsync(request);
+		var jsonContent = await response.Content.ReadAsStringAsync();
+
+		var userPersonalRecords = JsonConvert
+			.DeserializeObject<PersonalSprintRecordResponse>(jsonContent);
+
+		return userPersonalRecords;
+	}
+
+	/// <summary>
+	/// A list of Records representing the user's Blitz history.
+	/// </summary>
+	/// <param name="userIdOrUsername">
+	/// The username or user ID to look up.
+	/// </param>
+	/// <param name="leaderboard">
+	/// The personal leaderboard to look up. 
+	/// </param>
+	/// <returns>
+	/// A list of Records representing the user's Blitz history.
+	/// </returns>
+	public async Task<PersonalBlitzRecordResponse> FetchBlitzRecordsAsync(
+		[NotNull] string userIdOrUsername,
+		Leaderboard leaderboard)
+	{
+		var url = TetrioRequestUrls.FetchUserPersonalRecordsUrl(
+			userIdOrUsername, GameMode.Blitz, leaderboard);
+
+		using var httpClient = new TetrioHttpClient();
+		using var request = HttpRequest.Get(url)
+			.WithAuth()
+			.WithJsonAccept();
+
+		var response = await httpClient.SendAsync(request);
+		var jsonContent = await response.Content.ReadAsStringAsync();
+
+		var userPersonalRecords = JsonConvert
+			.DeserializeObject<PersonalBlitzRecordResponse>(jsonContent);
+
+		return userPersonalRecords;
+	}
+
+	/// <summary>
+	/// A list of Records representing the user's Zenith history.
+	/// </summary>
+	/// <param name="userIdOrUsername">
+	/// The username or user ID to look up.
+	/// </param>
+	/// <param name="leaderboard">
+	/// The personal leaderboard to look up. 
+	/// </param>
+	/// <returns>
+	/// A list of Records representing the user's Zenith history.
+	/// </returns>
+	public async Task<PersonalBlitzRecordResponse> FetchZenithRecordsAsync(
+		[NotNull] string userIdOrUsername,
+		Leaderboard leaderboard)
+	{
+		var url = TetrioRequestUrls.FetchUserPersonalRecordsUrl(
+			userIdOrUsername, GameMode.QuickPlay, leaderboard);
+
+		using var httpClient = new TetrioHttpClient();
+		using var request = HttpRequest.Get(url)
+			.WithAuth()
+			.WithJsonAccept();
+
+		var response = await httpClient.SendAsync(request);
+		var jsonContent = await response.Content.ReadAsStringAsync();
+
+		var userPersonalRecords = JsonConvert
+			.DeserializeObject<PersonalBlitzRecordResponse>(jsonContent);
+
+		return userPersonalRecords;
+	}
+
+	/// <summary>
+	/// A list of Records representing the user's Zenith Expert history.
+	/// </summary>
+	/// <param name="userIdOrUsername">
+	/// The username or user ID to look up.
+	/// </param>
+	/// <param name="leaderboard">
+	/// The personal leaderboard to look up. 
+	/// </param>
+	/// <returns>
+	/// A list of Records representing the user's Zenith Expert history.
+	/// </returns>
+	public async Task<PersonalZenithExRecordResponse> FetchZenithExRecordsAsync(
+		[NotNull] string userIdOrUsername,
+		Leaderboard leaderboard)
+	{
+		var url = TetrioRequestUrls.FetchUserPersonalRecordsUrl(
+			userIdOrUsername, GameMode.ExpertQuickPlay, leaderboard);
+
+		using var httpClient = new TetrioHttpClient();
+		using var request = HttpRequest.Get(url)
+			.WithAuth()
+			.WithJsonAccept();
+
+		var response = await httpClient.SendAsync(request);
+		var jsonContent = await response.Content.ReadAsStringAsync();
+
+		var userPersonalRecords = JsonConvert
+			.DeserializeObject<PersonalZenithExRecordResponse>(jsonContent);
+
+		return userPersonalRecords;
+	}
+
+	/// <summary>
+	/// A list of Records representing the user's Tetra League history.
+	/// </summary>
+	/// <param name="userIdOrUsername">
+	/// The username or user ID to look up.
+	/// </param>
+	/// <param name="leaderboard">
+	/// The personal leaderboard to look up. 
+	/// </param>
+	/// <returns>
+	/// A list of Records representing the user's Tetra League history.
+	/// </returns>
+	public async Task<PersonalLeagueRecordResponse> FetchLeagueRecordsAsync(
+		[NotNull] string userIdOrUsername,
+		Leaderboard leaderboard)
+	{
+		var url = TetrioRequestUrls.FetchUserPersonalRecordsUrl(
+			userIdOrUsername, GameMode.TetraLeague, leaderboard);
+
+		using var httpClient = new TetrioHttpClient();
+		using var request = HttpRequest.Get(url)
+			.WithAuth()
+			.WithJsonAccept();
+
+		var response = await httpClient.SendAsync(request);
+		var jsonContent = await response.Content.ReadAsStringAsync();
+
+		var userPersonalRecords = JsonConvert
+			.DeserializeObject<PersonalLeagueRecordResponse>(jsonContent);
+
+		return userPersonalRecords;
+	}
 }
 
 public class TetrioNewsApi
 {
-    /// <summary>
-    /// Fetches the latest news items in any stream.
-    /// </summary>
-    /// <param name="limit">
-    /// The amount of entries to return, between 1 and 100. 25 by default.
-    /// </param>
-    /// <returns>
-    /// Returns the latest news items in any stream.
-    /// </returns>
-    public async Task<LatestNewsResponse> FetchAllLatestNewsAsync(
-        int? limit)
-    {
-        var url = TetrioRequestUrls.FetchAllNewsUrl(limit);
+	/// <summary>
+	/// Fetches the latest news items in any stream.
+	/// </summary>
+	/// <param name="limit">
+	/// The amount of entries to return, between 1 and 100. 25 by default.
+	/// </param>
+	/// <returns>
+	/// Returns the latest news items in any stream.
+	/// </returns>
+	public async Task<LatestNewsResponse> FetchAllLatestNewsAsync(
+		int? limit)
+	{
+		var url = TetrioRequestUrls.FetchAllNewsUrl(limit);
 
-        using var httpClient = new TetrioHttpClient();
-        using var request = HttpRequest.Get(url)
-            .WithAuth()
-            .WithJsonAccept();
+		using var httpClient = new TetrioHttpClient();
+		using var request = HttpRequest.Get(url)
+			.WithAuth()
+			.WithJsonAccept();
 
-        var response = await httpClient.SendAsync(request);
-        var jsonContent = await response.Content.ReadAsStringAsync();
+		var response = await httpClient.SendAsync(request);
+		var jsonContent = await response.Content.ReadAsStringAsync();
 
-        var allLatestNewsResponse = JsonConvert
-            .DeserializeObject<LatestNewsResponse>(jsonContent);
+		var allLatestNewsResponse = JsonConvert
+			.DeserializeObject<LatestNewsResponse>(jsonContent);
 
-        return allLatestNewsResponse;
-    }
+		return allLatestNewsResponse;
+	}
 
-    public async Task<LatestNewsResponse> FetchLatestNewsInStreamAsync(
-        string stream,
-        int? limit = null)
-    {
-        var url = TetrioRequestUrls.FetchLatestNewsInStreamUrl(stream, limit);
+	/// <summary>
+	/// Fetches the latest news items in the stream. Use stream "global" for the global news.
+	/// </summary>
+	/// <param name="stream">
+	/// The news stream to look up (either "global" or "user_{userID}").
+	/// </param>
+	/// <param name="limit">
+	/// The amount of entries to return, between 1 and 100. 25 by default.
+	/// </param>
+	/// <returns>
+	/// Returns the latest news items in the stream. Use stream "global" for the global news.
+	/// </returns>
+	public async Task<LatestNewsResponse> FetchLatestNewsInStreamAsync(
+		NewsStream stream,
+		int? limit = null)
+	{
+		var url = TetrioRequestUrls.FetchLatestNewsInStreamUrl(stream.ToString(), limit);
 
-        using var httpClient = new TetrioHttpClient();
-        using var request = HttpRequest.Get(url)
-            .WithAuth()
-            .WithJsonAccept();
+		using var httpClient = new TetrioHttpClient();
+		using var request = HttpRequest.Get(url)
+			.WithAuth()
+			.WithJsonAccept();
 
-        var response = await httpClient.SendAsync(request);
-        var jsonContent = await response.Content.ReadAsStringAsync();
+		var response = await httpClient.SendAsync(request);
+		var jsonContent = await response.Content.ReadAsStringAsync();
 
-        var allLatestNewsResponse = JsonConvert
-            .DeserializeObject<LatestNewsResponse>(jsonContent);
+		var allLatestNewsResponse = JsonConvert
+			.DeserializeObject<LatestNewsResponse>(jsonContent);
 
-        return allLatestNewsResponse;
-    }
+		return allLatestNewsResponse;
+	}
 }
 
 public class TetrioUserSummariesApi
